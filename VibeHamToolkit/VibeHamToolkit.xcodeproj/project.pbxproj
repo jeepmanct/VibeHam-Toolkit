@@ -28,6 +28,7 @@
 		8DE1BA74D693E7D6C44E76EB /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7C59023AAD777CB46E4B3A /* ShareSheet.swift */; };
 		922DB92867F9EB4591CA6F9B /* SatelliteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91276EB88C46DF24E7CEFCC8 /* SatelliteService.swift */; };
 		A751E364F6060D24456C84C3 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */; };
+		D772D926BACD719ED4F66905 /* SolarDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A2ADE49770595AF72A3562 /* SolarDataService.swift */; };
 		F89B4D6FFEA237506856FC2D /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6011E88EBC8D587D782D10 /* StatsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		CB02EC8712F7003466E9DD71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CD6C1BC422F160CBE29053FD /* QRZService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRZService.swift; sourceTree = "<group>"; };
+		D1A2ADE49770595AF72A3562 /* SolarDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolarDataService.swift; sourceTree = "<group>"; };
 		E4295D113C3A79D85E645DDC /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		E710BD25EB4492741919223E /* VibeHamToolkitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibeHamToolkitApp.swift; sourceTree = "<group>"; };
 		F1047E5C4E3A03FDE3007D4D /* ADIFExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADIFExporter.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				11FE90D9F4A71ACDD8EB0EC2 /* SatelliteView.swift */,
 				43DE1AF3848BC9194524B8F8 /* SettingsView.swift */,
 				0A7C59023AAD777CB46E4B3A /* ShareSheet.swift */,
+				D1A2ADE49770595AF72A3562 /* SolarDataService.swift */,
 				8E6011E88EBC8D587D782D10 /* StatsView.swift */,
 				E4295D113C3A79D85E645DDC /* ThemeManager.swift */,
 				A63261E4886AE5FEEACF3182 /* ToolsView.swift */,
@@ -189,6 +192,7 @@
 				0E4D796F0FD83E931C6747F7 /* SatelliteView.swift in Sources */,
 				2EAE1B662EB1215528AA31B2 /* SettingsView.swift in Sources */,
 				8DE1BA74D693E7D6C44E76EB /* ShareSheet.swift in Sources */,
+				D772D926BACD719ED4F66905 /* SolarDataService.swift in Sources */,
 				F89B4D6FFEA237506856FC2D /* StatsView.swift in Sources */,
 				0CA38DC72281AE28470AA731 /* ThemeManager.swift in Sources */,
 				3626FAD91BB226028ABD4CB4 /* ToolsView.swift in Sources */,

@@ -182,23 +182,34 @@ final class Satellite {
 final class SolarDataPoint {
     @Attribute(.unique) var date: String
     var sfi: Double?
+    var sfiAdjusted: Double?
     var aIndex: Double?
     var kIndex: Double?
+    var kIndexMax: Double?
     var sunspotNumber: Double?
     var updatedAt: Date
 
     init(
         date: String,
         sfi: Double? = nil,
+        sfiAdjusted: Double? = nil,
         aIndex: Double? = nil,
         kIndex: Double? = nil,
+        kIndexMax: Double? = nil,
         sunspotNumber: Double? = nil
     ) {
         self.date = date
         self.sfi = sfi
+        self.sfiAdjusted = sfiAdjusted
         self.aIndex = aIndex
         self.kIndex = kIndex
+        self.kIndexMax = kIndexMax
         self.sunspotNumber = sunspotNumber
         self.updatedAt = Date()
+    }
+
+    static func lookup(date: String, in context: ModelContext) -> SolarDataPoint? {
+        let descriptor = FetchDescriptor<SolarDataPoint>(predicate: #Predicate { $0.date == date })
+        return try? context.fetch(descriptor).first
     }
 }

@@ -9,6 +9,11 @@ final class ConditionsViewModel: ObservableObject {
     @Published var sunspotNumber: String = "--"
     @Published var status: String = "Tap refresh to load"
 
+    @Published var storedDays: Int = 0
+    @Published var storedRange: String = ""
+    @Published var solarSyncStatus: String = ""
+    @Published var isSyncingSolar = false
+
     func refresh() async {
         status = "Loading..."
         do {
@@ -25,6 +30,65 @@ final class ConditionsViewModel: ObservableObject {
         } catch {
             status = "Error: \(error.localizedDescription)"
         }
+    }
+
+    func loadStoredCount(context: ModelContext) {
+        let descriptor = FetchDescriptor<SolarDataPoint>(sortBy: [SortDescriptor<SolarDataPoint>(\.date)])
+        guard let points = try? context.fetch(descriptor) else { return }
+        storedDays = points.count
+        if let first = points.first?.date, let last = points.last?.date {
+            storedRange = "\(format(date: first)) - \(format(date: last))"
+        }
+    }
+
+    func syncHistorical(context: ModelContext) async {
+        isSyncingSolar = true
+        solarSyncStatus = "Downloading GFZ Potsdam data..."
+        do {
+            let records = try await SolarDataService.shared.fetchAndParse()
+            solarSyncStatus = "Importing \(records.count) days..."
+
+            let descriptor = FetchDescriptor<SolarDataPoint>()
+            let existing = (try? context.fetch(descriptor)) ?? []
+            let existingByDate = Dictionary(uniqueKeysWithValues: existing.map { ($0.date, $0) })
+
+            for record in records {
+                if let point = existingByDate[record.date] {
+                    point.sfi = record.sfi
+                    point.sfiAdjusted = record.sfiAdjusted
+                    point.aIndex = record.aIndex
+                    point.kIndex = record.kIndex
+                    point.kIndexMax = record.kIndexMax
+                    point.sunspotNumber = record.sunspotNumber
+                    point.updatedAt = Date()
+                } else {
+                    let point = SolarDataPoint(
+                        date: record.date,
+                        sfi: record.sfi,
+                        sfiAdjusted: record.sfiAdjusted,
+                        aIndex: record.aIndex,
+                        kIndex: record.kIndex,
+                        kIndexMax: record.kIndexMax,
+                        sunspotNumber: record.sunspotNumber
+                    )
+                    context.insert(point)
+                }
+            }
+            try context.save()
+            loadStoredCount(context: context)
+            solarSyncStatus = "Synced \(records.count) days."
+        } catch {
+            solarSyncStatus = "Sync failed: \(error.localizedDescription)"
+        }
+        isSyncingSolar = false
+    }
+
+    private func format(date: String) -> String {
+        guard date.count == 8 else { return date }
+        let year = String(date.prefix(4))
+        let month = String(date[date.index(date.startIndex, offsetBy: 4)..<date.index(date.startIndex, offsetBy: 6)])
+        let day = String(date[date.index(date.startIndex, offsetBy: 6)..<date.index(date.startIndex, offsetBy: 8)])
+        return "\(year)-\(month)-\(day)"
     }
 
     private func string(from value: Any?) -> String {
@@ -65,12 +129,13 @@ final class ConditionsViewModel: ObservableObject {
 }
 
 struct ConditionsView: View {
+    @Environment(\.modelContext) private var context
     @StateObject private var viewModel = ConditionsViewModel()
 
     var body: some View {
         NavigationStack {
             List {
-                Section("Solar & Geomagnetic") {
+                Section("Solar & Geomagnetic (Today)") {
                     ConditionRow(label: "Solar Flux Index", value: viewModel.sfi, unit: "sfu")
                     ConditionRow(label: "A-Index", value: viewModel.aIndex)
                     ConditionRow(label: "K-Index", value: viewModel.kIndex)
@@ -78,6 +143,22 @@ struct ConditionsView: View {
                 }
                 Section {
                     Text(viewModel.status).font(.caption).foregroundStyle(.secondary)
+                }
+
+                Section("Historical Solar Data") {
+                    ConditionRow(label: "Stored days", value: "\(viewModel.storedDays)")
+                    if !viewModel.storedRange.isEmpty {
+                        ConditionRow(label: "Range", value: viewModel.storedRange)
+                    }
+                    Button("Sync Historical Data") {
+                        Task { await viewModel.syncHistorical(context: context) }
+                    }
+                    .disabled(viewModel.isSyncingSolar)
+                    if !viewModel.solarSyncStatus.isEmpty {
+                        Text(viewModel.solarSyncStatus)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
             .navigationTitle("Space Weather")
@@ -87,6 +168,9 @@ struct ConditionsView: View {
                         Task { await viewModel.refresh() }
                     }
                 }
+            }
+            .onAppear {
+                viewModel.loadStoredCount(context: context)
             }
         }
     }

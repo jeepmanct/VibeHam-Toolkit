@@ -24,6 +24,8 @@ struct QSOEditorView: View {
                     if let freq = qso.freq { LabeledContent("Freq", value: freq) }
                 }
 
+                solarSection
+
                 Section("Activation Refs") {
                     TextField("POTA Reference", text: $potaRef)
                         .autocapitalization(.allCharacters)
@@ -68,6 +70,26 @@ struct QSOEditorView: View {
                     if let data = try? await item?.loadTransferable(type: Data.self) {
                         imageData = data
                     }
+                }
+            }
+        }
+    }
+
+    private var solarSection: some View {
+        let point = SolarDataPoint.lookup(date: qso.qsoDate, in: context)
+        return Group {
+            if let point = point {
+                Section("Solar Conditions for This QSO") {
+                    if let sfi = point.sfi { LabeledContent("SFI", value: String(format: "%.1f", sfi)) }
+                    if let a = point.aIndex { LabeledContent("A-Index", value: String(format: "%.1f", a)) }
+                    if let k = point.kIndex { LabeledContent("K-Index", value: String(format: "%.1f", k)) }
+                    if let sn = point.sunspotNumber { LabeledContent("Sunspot #", value: String(format: "%.1f", sn)) }
+                }
+            } else {
+                Section("Solar Conditions") {
+                    Text("No historical solar data for \(qso.qsoDate). Sync in Space Weather.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
         }
