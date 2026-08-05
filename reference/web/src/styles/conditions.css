@@ -1,0 +1,67 @@
+.conditions-now {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.condition-tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+.condition-tile .label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.condition-tile .value {
+  font-family: var(--font-mono);
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-top: 0.35rem;
+}
+
+.spot-table, .contest-list {
+  margin-top: 1rem;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.spot-row {
+  display: grid;
+  grid-template-columns: 70px 90px 50px 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+.spot-row .call { font-family: var(--font-mono); font-weight: 700; }
+.spot-row .freq { font-family: var(--font-mono); color: var(--muted); }
+.spot-row .comment { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.spot-row .time { font-family: var(--font-mono); color: var(--muted); font-size: 0.78rem; }
+.spot-row.needed { background: color-mix(in srgb, var(--status-warning) 10%, transparent); margin: 0 -0.75rem; padding: 0.5rem 0.75rem; border-radius: 8px; }
+.needed-badge {
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #1a1400;
+  background: var(--status-warning);
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  margin-left: 0.3rem;
+}
+
+.contest-row {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.contest-row a { text-decoration: none; font-weight: 600; }
+.contest-row a:hover { text-decoration: underline; }
+.contest-row .when { color: var(--muted); font-size: 0.8rem; margin-top: 0.15rem; }

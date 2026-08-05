@@ -1,0 +1,165 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Admin" active="admin">
+  <h1>Admin</h1>
+
+  <section id="login-section">
+    <div class="card">
+      <h2>Log in</h2>
+      <form id="login-form">
+        <input type="password" id="password" placeholder="Admin password" autocomplete="current-password" required />
+        <p id="login-status" class="status-line"></p>
+        <button type="submit" class="btn">Log in</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="admin-tools" hidden>
+    <div class="card">
+      <h2>Upload photo</h2>
+      <form id="upload-form" style="display:flex;flex-direction:column;gap:0.75rem;">
+        <input type="file" id="photo-file" accept="image/*" required />
+        <input type="text" id="photo-caption" placeholder="Caption (optional)" />
+        <p id="upload-status" class="status-line"></p>
+        <button type="submit" class="btn" style="align-self:flex-start;">Upload</button>
+      </form>
+    </div>
+
+    <section>
+      <div class="card">
+        <h2>Sync from QRZ.com</h2>
+        <p style="margin:0 0 0.75rem;color:var(--muted);font-size:0.9rem;">Pulls your full logbook via the QRZ Logbook API.</p>
+        <button type="button" id="qrz-sync" class="btn">Sync now</button>
+        <p id="qrz-status" class="status-line"></p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Import LoTW ADIF</h2>
+        <form id="adif-form" style="display:flex;flex-direction:column;gap:0.75rem;">
+          <input type="file" id="adif-file" accept=".adi,.adif" required />
+          <p id="adif-status" class="status-line"></p>
+          <button type="submit" class="btn" style="align-self:flex-start;">Import</button>
+        </form>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Solar data</h2>
+        <p style="margin:0 0 0.75rem;color:var(--muted);font-size:0.9rem;">Refreshes historical SFI/A/K-index data associated with each QSO.</p>
+        <button type="button" id="solar-sync" class="btn">Sync now</button>
+        <p id="solar-status" class="status-line"></p>
+      </div>
+    </section>
+  </section>
+
+  <script>
+    const TOKEN_KEY = 'n1ah_admin_token';
+
+    const loginSection = document.getElementById('login-section')!;
+    const adminTools = document.getElementById('admin-tools')!;
+    const loginStatus = document.getElementById('login-status')!;
+
+    function showAdmin() {
+      loginSection.setAttribute('hidden', '');
+      adminTools.removeAttribute('hidden');
+    }
+
+    if (sessionStorage.getItem(TOKEN_KEY)) {
+      showAdmin();
+    }
+
+    document.getElementById('login-form')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = (document.getElementById('password') as HTMLInputElement).value;
+      loginStatus.textContent = 'Checking…';
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        const { token } = await res.json();
+        sessionStorage.setItem(TOKEN_KEY, token);
+        loginStatus.textContent = '';
+        showAdmin();
+      } else {
+        loginStatus.textContent = 'Wrong password.';
+      }
+    });
+
+    document.getElementById('upload-form')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('photo-file') as HTMLInputElement;
+      const caption = (document.getElementById('photo-caption') as HTMLInputElement).value;
+      const status = document.getElementById('upload-status')!;
+      if (!fileInput.files?.length) return;
+      const form = new FormData();
+      form.append('photo', fileInput.files[0]);
+      form.append('caption', caption);
+      status.textContent = 'Uploading…';
+      const res = await fetch('/api/photos', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+        body: form,
+      });
+      status.textContent = res.ok ? 'Uploaded!' : 'Upload failed.';
+    });
+
+    document.getElementById('adif-form')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('adif-file') as HTMLInputElement;
+      const status = document.getElementById('adif-status')!;
+      if (!fileInput.files?.length) return;
+      const form = new FormData();
+      form.append('adif', fileInput.files[0]);
+      status.textContent = 'Importing…';
+      const res = await fetch('/api/qsos/import', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+        body: form,
+      });
+      if (res.ok) {
+        const { imported } = await res.json();
+        status.textContent = `Imported ${imported} contacts.`;
+      } else {
+        status.textContent = 'Import failed.';
+      }
+    });
+
+    document.getElementById('qrz-sync')!.addEventListener('click', async () => {
+      const status = document.getElementById('qrz-status')!;
+      status.textContent = 'Syncing…';
+      const res = await fetch('/api/qsos/import/qrz', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+      });
+      if (res.ok) {
+        const { imported } = await res.json();
+        status.textContent = `Synced ${imported} contacts.`;
+      } else {
+        const body = await res.json().catch(() => ({}));
+        status.textContent = body.error ?? 'QRZ sync failed.';
+      }
+    });
+
+    document.getElementById('solar-sync')!.addEventListener('click', async () => {
+      const status = document.getElementById('solar-status')!;
+      status.textContent = 'Syncing…';
+      const res = await fetch('/api/solar/sync', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+      });
+      if (res.ok) {
+        const { imported, from, to } = await res.json();
+        status.textContent = `Synced ${imported} days (${from}–${to}).`;
+      } else {
+        const body = await res.json().catch(() => ({}));
+        status.textContent = body.error ?? 'Solar sync failed.';
+      }
+    });
+  </script>
+</Base>

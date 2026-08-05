@@ -1,0 +1,49 @@
+.station-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.station-fact {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+.station-fact .label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.station-fact .value {
+  margin-top: 0.35rem;
+  font-size: 1.05rem;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+.link-group h2 { margin-bottom: 0.6rem; }
+.link-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.link-group a {
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+.link-group a:hover { text-decoration: underline; }
+.link-group .desc {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-top: 0.1rem;
+}

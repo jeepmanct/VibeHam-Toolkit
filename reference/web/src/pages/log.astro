@@ -1,0 +1,389 @@
+---
+import Base from '../layouts/Base.astro';
+import FilterPanel from '../components/FilterPanel.astro';
+---
+<Base title="QSO Log" active="log">
+  <h1>QSO Log</h1>
+  <p class="lede">Contacts imported from ARRL Logbook of The World (LoTW) ADIF exports.</p>
+
+  <FilterPanel />
+
+  <div class="card" style="padding:0;overflow:hidden;margin-top:1.5rem;">
+    <div style="overflow-x:auto;">
+      <table id="log-table">
+        <thead>
+          <tr>
+            <th>Call</th>
+            <th>Date</th>
+            <th>Band</th>
+            <th>Mode</th>
+            <th>QSL</th>
+            <th>Solar</th>
+            <th>Card</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.75rem;">
+    <span id="log-count" class="status-line" style="margin:0;"></span>
+    <button type="button" id="load-more" class="btn secondary" hidden>Load more</button>
+  </div>
+
+  <section>
+    <button type="button" id="import-toggle" class="btn secondary">Import LoTW data</button>
+
+    <div id="import-panel" class="card" style="margin-top:1rem;" hidden>
+      <div id="import-login">
+        <h2>Log in to import</h2>
+        <form id="login-form">
+          <input type="password" id="password" placeholder="Admin password" autocomplete="current-password" required />
+          <p id="login-status" class="status-line"></p>
+          <button type="submit" class="btn">Log in</button>
+        </form>
+      </div>
+
+      <div id="import-upload" hidden style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div>
+          <h2>Sync from QRZ.com</h2>
+          <p style="margin:0 0 0.75rem;color:var(--muted);font-size:0.9rem;">Pulls your full logbook via the QRZ Logbook API.</p>
+          <button type="button" id="qrz-sync" class="btn">Sync now</button>
+          <p id="qrz-status" class="status-line"></p>
+        </div>
+
+        <div>
+          <h2>Import LoTW ADIF</h2>
+          <form id="adif-form" style="display:flex;flex-direction:column;gap:0.75rem;">
+            <input type="file" id="adif-file" accept=".adi,.adif" required />
+            <p id="adif-status" class="status-line"></p>
+            <button type="submit" class="btn" style="align-self:flex-start;">Import</button>
+          </form>
+        </div>
+
+        <div>
+          <h2>Solar data</h2>
+          <p style="margin:0 0 0.75rem;color:var(--muted);font-size:0.9rem;">Refreshes historical SFI/A/K-index data used in the Solar column above.</p>
+          <button type="button" id="solar-sync" class="btn">Sync now</button>
+          <p id="solar-status" class="status-line"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import { initQsoFilters } from '../lib/qsoFilters';
+    import { downloadOrShareImage } from '../lib/downloadImage';
+
+    type Qso = {
+      call: string;
+      qsoDate: string;
+      timeOn: string | null;
+      band: string;
+      mode: string;
+      freq: string | null;
+      gridsquare: string | null;
+      country: string | null;
+      rstSent: string | null;
+      lotwQslRcvd?: string;
+      sfi: number | null;
+      aIndex: number | null;
+      kIndex: number | null;
+    };
+    type QsoPage = { qsos: Qso[]; total: number; offset: number; limit: number };
+
+    function formatSolar(q: Qso): string {
+      if (q.sfi == null && q.aIndex == null && q.kIndex == null) return '—';
+      const parts = [];
+      if (q.sfi != null) parts.push(`SFI ${q.sfi}`);
+      if (q.aIndex != null) parts.push(`A ${q.aIndex}`);
+      if (q.kIndex != null) parts.push(`K ${q.kIndex.toFixed(1)}`);
+      return parts.join(' · ');
+    }
+
+    const tbody = document.querySelector('#log-table tbody')!;
+    const logCount = document.getElementById('log-count')!;
+    const loadMoreBtn = document.getElementById('load-more') as HTMLButtonElement;
+    const PAGE_SIZE = 50;
+    let loadedCount = 0;
+    let currentQuery = '';
+
+    function formatDate(d: string) {
+      if (d.length !== 8) return d;
+      return `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
+    }
+
+    function formatTimeOn(t: string | null): string {
+      if (!t || t.length !== 4) return '—';
+      return `${t.slice(0, 2)}:${t.slice(2, 4)} UTC`;
+    }
+
+    function generateQslCard(q: Qso): string {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1400;
+      canvas.height = 900;
+      const ctx = canvas.getContext('2d')!;
+
+      ctx.fillStyle = '#f7f6f2';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = '#e5e3dc';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+
+      // Header band
+      ctx.fillStyle = '#0d9488';
+      ctx.fillRect(0, 0, canvas.width, 150);
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#f7f6f2';
+      ctx.font = '700 64px ui-monospace, monospace';
+      ctx.fillText('{CALLSIGN}', 50, 95);
+      ctx.font = '400 22px sans-serif';
+      ctx.fillText('Stratford, CT · FN31', 50, 128);
+
+      ctx.textAlign = 'right';
+      ctx.font = '600 20px sans-serif';
+      ctx.fillText('QSL CARD', canvas.width - 50, 95);
+
+      // Confirms QSO with
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#888888';
+      ctx.font = '400 24px sans-serif';
+      ctx.fillText('This QSL confirms a two-way radio contact with', canvas.width / 2, 225);
+
+      ctx.fillStyle = '#1a1a1a';
+      ctx.font = '700 100px ui-monospace, monospace';
+      ctx.fillText(q.call, canvas.width / 2, 330);
+
+      // Detail grid
+      const details: [string, string][] = [
+        ['Date', formatDate(q.qsoDate)],
+        ['Time', formatTimeOn(q.timeOn)],
+        ['Band', q.band ?? '—'],
+        ['Mode', q.mode ?? '—'],
+        ['Frequency', q.freq ? `${q.freq} MHz` : '—'],
+        ['RST Sent', q.rstSent ?? '—'],
+        ['Grid', q.gridsquare ?? '—'],
+        ['Country', q.country ?? '—'],
+      ];
+      const cols = 4;
+      const cellW = (canvas.width - 100) / cols;
+      const startY = 420;
+      const rowH = 110;
+      details.forEach(([label, value], i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const x = 50 + col * cellW;
+        const y = startY + row * rowH;
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#888888';
+        ctx.font = '600 16px sans-serif';
+        ctx.fillText(label.toUpperCase(), x, y);
+        ctx.fillStyle = '#1a1a1a';
+        ctx.font = '600 30px sans-serif';
+        ctx.fillText(value, x, y + 36);
+      });
+
+      // LoTW confirmation stamp
+      if (q.lotwQslRcvd === 'Y') {
+        ctx.save();
+        ctx.translate(canvas.width - 200, 700);
+        ctx.rotate(-0.2);
+        ctx.strokeStyle = '#0ca30c';
+        ctx.lineWidth = 5;
+        ctx.strokeRect(-140, -40, 280, 80);
+        ctx.fillStyle = '#0ca30c';
+        ctx.textAlign = 'center';
+        ctx.font = '700 26px sans-serif';
+        ctx.fillText('CONFIRMED', 0, -5);
+        ctx.font = '600 16px sans-serif';
+        ctx.fillText('VIA LOTW', 0, 20);
+        ctx.restore();
+      }
+
+      // Footer
+      ctx.textAlign = 'center';
+      ctx.strokeStyle = '#e5e3dc';
+      ctx.beginPath();
+      ctx.moveTo(50, 800);
+      ctx.lineTo(canvas.width - 50, 800);
+      ctx.stroke();
+      ctx.fillStyle = '#1a1a1a';
+      ctx.font = '600 24px sans-serif';
+      ctx.fillText('73! de {CALLSIGN}', canvas.width / 2, 845);
+      ctx.fillStyle = '#999999';
+      ctx.font = '400 16px sans-serif';
+      const genDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      ctx.fillText(`Generated ${genDate} from the station log`, canvas.width / 2, 875);
+
+      return canvas.toDataURL('image/png');
+    }
+
+    function downloadQslCard(q: Qso) {
+      const dataUrl = generateQslCard(q);
+      downloadOrShareImage(dataUrl, `QSL-{CALLSIGN}-${q.call}-${q.qsoDate}.png`);
+    }
+
+    function appendRows(qsos: Qso[]) {
+      for (const q of qsos) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${q.call}</td>
+          <td>${formatDate(q.qsoDate)}</td>
+          <td>${q.band ?? '—'}</td>
+          <td>${q.mode ?? '—'}</td>
+          <td>${q.lotwQslRcvd === 'Y' ? '✅' : '—'}</td>
+          <td style="color:var(--muted);white-space:nowrap;">${formatSolar(q)}</td>
+          <td><button type="button" class="btn secondary qsl-card-btn" style="padding:0.3rem 0.7rem;font-size:0.78rem;">QSL</button></td>
+        `;
+        tr.querySelector('.qsl-card-btn')!.addEventListener('click', () => downloadQslCard(q));
+        tbody.appendChild(tr);
+      }
+    }
+
+    async function loadPage(offset: number) {
+      const res = await fetch(`/api/qsos?limit=${PAGE_SIZE}&offset=${offset}&${currentQuery}`);
+      const page: QsoPage = await res.json();
+      if (offset === 0) tbody.innerHTML = '';
+      appendRows(page.qsos);
+      loadedCount = offset + page.qsos.length;
+      if (page.total === 0) {
+        logCount.textContent = 'No contacts match the current filters.';
+      } else {
+        logCount.textContent = `Showing ${loadedCount} of ${page.total}`;
+      }
+      loadMoreBtn.hidden = loadedCount >= page.total;
+    }
+
+    function loadQsos() {
+      loadPage(0).catch(() => {
+        tbody.innerHTML = '<tr><td colspan="7" style="font-family:inherit;color:var(--muted);">Could not load log data.</td></tr>';
+      });
+    }
+
+    loadMoreBtn.addEventListener('click', () => {
+      loadPage(loadedCount).catch(() => {
+        logCount.textContent = 'Could not load more.';
+      });
+    });
+
+    initQsoFilters(
+      (query) => {
+        currentQuery = query;
+        loadQsos();
+      },
+      { startUnselected: true },
+    );
+
+    // --- Password-protected import panel ---
+    const TOKEN_KEY = 'n1ah_admin_token';
+
+    const importToggle = document.getElementById('import-toggle')!;
+    const importPanel = document.getElementById('import-panel')!;
+    const importLogin = document.getElementById('import-login')!;
+    const importUpload = document.getElementById('import-upload')!;
+    const loginStatus = document.getElementById('login-status')!;
+
+    function showUploadForm() {
+      importLogin.setAttribute('hidden', '');
+      importUpload.removeAttribute('hidden');
+    }
+
+    importToggle.addEventListener('click', () => {
+      const willShow = importPanel.hasAttribute('hidden');
+      importPanel.toggleAttribute('hidden');
+      if (willShow && sessionStorage.getItem(TOKEN_KEY)) {
+        showUploadForm();
+      }
+    });
+
+    document.getElementById('login-form')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = (document.getElementById('password') as HTMLInputElement).value;
+      loginStatus.textContent = 'Checking…';
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        const { token } = await res.json();
+        sessionStorage.setItem(TOKEN_KEY, token);
+        loginStatus.textContent = '';
+        showUploadForm();
+      } else {
+        loginStatus.textContent = 'Wrong password.';
+      }
+    });
+
+    function handleSessionExpired(status: HTMLElement) {
+      sessionStorage.removeItem(TOKEN_KEY);
+      importUpload.setAttribute('hidden', '');
+      importLogin.removeAttribute('hidden');
+      status.textContent = '';
+      loginStatus.textContent = 'Session expired, please log in again.';
+    }
+
+    document.getElementById('adif-form')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('adif-file') as HTMLInputElement;
+      const status = document.getElementById('adif-status')!;
+      if (!fileInput.files?.length) return;
+      const form = new FormData();
+      form.append('adif', fileInput.files[0]);
+      status.textContent = 'Importing…';
+      const res = await fetch('/api/qsos/import', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+        body: form,
+      });
+      if (res.ok) {
+        const { imported } = await res.json();
+        status.textContent = `Imported ${imported} contacts.`;
+        fileInput.value = '';
+        loadQsos();
+      } else if (res.status === 401) {
+        handleSessionExpired(status);
+      } else {
+        status.textContent = 'Import failed.';
+      }
+    });
+
+    document.getElementById('qrz-sync')!.addEventListener('click', async () => {
+      const status = document.getElementById('qrz-status')!;
+      status.textContent = 'Syncing…';
+      const res = await fetch('/api/qsos/import/qrz', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+      });
+      if (res.ok) {
+        const { imported } = await res.json();
+        status.textContent = `Synced ${imported} contacts.`;
+        loadQsos();
+      } else if (res.status === 401) {
+        handleSessionExpired(status);
+      } else {
+        const body = await res.json().catch(() => ({}));
+        status.textContent = body.error ?? 'QRZ sync failed.';
+      }
+    });
+
+    document.getElementById('solar-sync')!.addEventListener('click', async () => {
+      const status = document.getElementById('solar-status')!;
+      status.textContent = 'Syncing…';
+      const res = await fetch('/api/solar/sync', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+      });
+      if (res.ok) {
+        const { imported, from, to } = await res.json();
+        status.textContent = `Synced ${imported} days (${from}–${to}).`;
+        loadQsos();
+      } else if (res.status === 401) {
+        handleSessionExpired(status);
+      } else {
+        const body = await res.json().catch(() => ({}));
+        status.textContent = body.error ?? 'Solar sync failed.';
+      }
+    });
+  </script>
+</Base>

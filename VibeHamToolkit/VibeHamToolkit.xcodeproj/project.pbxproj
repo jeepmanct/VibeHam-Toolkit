@@ -1,0 +1,355 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0CA38DC72281AE28470AA731 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4295D113C3A79D85E645DDC /* ThemeManager.swift */; };
+		1E7B0C488200E26E99732551 /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD2DF3AD38847116AA49504 /* ConditionsView.swift */; };
+		2EAE1B662EB1215528AA31B2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE1AF3848BC9194524B8F8 /* SettingsView.swift */; };
+		3626FAD91BB226028ABD4CB4 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63261E4886AE5FEEACF3182 /* ToolsView.swift */; };
+		4A2C03E683ACB02D8C8F2DD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB02EC8712F7003466E9DD71 /* Assets.xcassets */; };
+		5EA975E13BD2268F10672CCF /* ADIFParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */; };
+		5F5DC8C9CF0D58600B174A63 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62586E58C8D05692F8D4D56 /* MapView.swift */; };
+		67AEFC9DF604E093F7A84B75 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F0496B31EF9EBCDDD1F4EF /* ContentView.swift */; };
+		6E4C17C6BB12E89E23BB1511 /* GridUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB88FA573ED85901D3B56B4 /* GridUtility.swift */; };
+		76D97954A2D14BE0C7733C85 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E21AD33E4DF6C5DA400ED22 /* Models.swift */; };
+		89E3563E2527E97A879C265B /* VibeHamToolkitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E710BD25EB4492741919223E /* VibeHamToolkitApp.swift */; };
+		A751E364F6060D24456C84C3 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */; };
+		F89B4D6FFEA237506856FC2D /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6011E88EBC8D587D782D10 /* StatsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3F879E60BF9FE815E3594C4A /* VibeHamToolkit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VibeHamToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		43DE1AF3848BC9194524B8F8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4E21AD33E4DF6C5DA400ED22 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		52F0496B31EF9EBCDDD1F4EF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		5CD2DF3AD38847116AA49504 /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
+		7EB88FA573ED85901D3B56B4 /* GridUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridUtility.swift; sourceTree = "<group>"; };
+		7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADIFParser.swift; sourceTree = "<group>"; };
+		8E6011E88EBC8D587D782D10 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		A62586E58C8D05692F8D4D56 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		A63261E4886AE5FEEACF3182 /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
+		A674DF5DDF045874BEEC6578 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		CB02EC8712F7003466E9DD71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E4295D113C3A79D85E645DDC /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		E710BD25EB4492741919223E /* VibeHamToolkitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibeHamToolkitApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		268435AA237DCC372826B2F7 /* VibeHamToolkit */ = {
+			isa = PBXGroup;
+			children = (
+				7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */,
+				CB02EC8712F7003466E9DD71 /* Assets.xcassets */,
+				5CD2DF3AD38847116AA49504 /* ConditionsView.swift */,
+				52F0496B31EF9EBCDDD1F4EF /* ContentView.swift */,
+				7EB88FA573ED85901D3B56B4 /* GridUtility.swift */,
+				A674DF5DDF045874BEEC6578 /* Info.plist */,
+				AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */,
+				A62586E58C8D05692F8D4D56 /* MapView.swift */,
+				4E21AD33E4DF6C5DA400ED22 /* Models.swift */,
+				43DE1AF3848BC9194524B8F8 /* SettingsView.swift */,
+				8E6011E88EBC8D587D782D10 /* StatsView.swift */,
+				E4295D113C3A79D85E645DDC /* ThemeManager.swift */,
+				A63261E4886AE5FEEACF3182 /* ToolsView.swift */,
+				E710BD25EB4492741919223E /* VibeHamToolkitApp.swift */,
+			);
+			path = VibeHamToolkit;
+			sourceTree = "<group>";
+		};
+		8EC7AD5665618C0ABEFA3EFA = {
+			isa = PBXGroup;
+			children = (
+				268435AA237DCC372826B2F7 /* VibeHamToolkit */,
+				F47D281951084767D69D2E1E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F47D281951084767D69D2E1E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3F879E60BF9FE815E3594C4A /* VibeHamToolkit.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		018D66838D3F7EE930077BE8 /* VibeHamToolkit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B19AB29A5B16B074839613A8 /* Build configuration list for PBXNativeTarget "VibeHamToolkit" */;
+			buildPhases = (
+				8F0A97E6C422D08BA2938A67 /* Sources */,
+				DCCED439B0574B0389A9D709 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VibeHamToolkit;
+			packageProductDependencies = (
+			);
+			productName = VibeHamToolkit;
+			productReference = 3F879E60BF9FE815E3594C4A /* VibeHamToolkit.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E766534BFEABC670125EF6B6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 6AD6C0BF5C91E9403FF208FA /* Build configuration list for PBXProject "VibeHamToolkit" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 8EC7AD5665618C0ABEFA3EFA;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F47D281951084767D69D2E1E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				018D66838D3F7EE930077BE8 /* VibeHamToolkit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DCCED439B0574B0389A9D709 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A2C03E683ACB02D8C8F2DD8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8F0A97E6C422D08BA2938A67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EA975E13BD2268F10672CCF /* ADIFParser.swift in Sources */,
+				1E7B0C488200E26E99732551 /* ConditionsView.swift in Sources */,
+				67AEFC9DF604E093F7A84B75 /* ContentView.swift in Sources */,
+				6E4C17C6BB12E89E23BB1511 /* GridUtility.swift in Sources */,
+				A751E364F6060D24456C84C3 /* LogView.swift in Sources */,
+				5F5DC8C9CF0D58600B174A63 /* MapView.swift in Sources */,
+				76D97954A2D14BE0C7733C85 /* Models.swift in Sources */,
+				2EAE1B662EB1215528AA31B2 /* SettingsView.swift in Sources */,
+				F89B4D6FFEA237506856FC2D /* StatsView.swift in Sources */,
+				0CA38DC72281AE28470AA731 /* ThemeManager.swift in Sources */,
+				3626FAD91BB226028ABD4CB4 /* ToolsView.swift in Sources */,
+				89E3563E2527E97A879C265B /* VibeHamToolkitApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4CDC44A78E80EE37B85C8B36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = VibeHam;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7659C4272C4BFE666D925926 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = VibeHamToolkit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vibeham.VibeHamToolkit;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		93CA17DF1723C0C2C6061E3E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = VibeHam;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AFD9C55B5345AA07D388E954 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = VibeHamToolkit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vibeham.VibeHamToolkit;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6AD6C0BF5C91E9403FF208FA /* Build configuration list for PBXProject "VibeHamToolkit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CDC44A78E80EE37B85C8B36 /* Debug */,
+				93CA17DF1723C0C2C6061E3E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B19AB29A5B16B074839613A8 /* Build configuration list for PBXNativeTarget "VibeHamToolkit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AFD9C55B5345AA07D388E954 /* Debug */,
+				7659C4272C4BFE666D925926 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E766534BFEABC670125EF6B6 /* Project object */;
+}

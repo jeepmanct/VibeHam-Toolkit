@@ -1,0 +1,1071 @@
+---
+import Base from '../layouts/Base.astro';
+import '../styles/tools.css';
+---
+<Base title="Tools" active="tools">
+  <h1>Tools</h1>
+  <p class="lede">Quick calculators and log lookups for operating.</p>
+
+  <div class="tools-grid">
+    <div class="tool-card">
+      <h2><span>Grid Square Converter</span><button type="button" class="tool-reset-btn" id="grid-reset-btn">Reset</button></h2>
+      <div class="tool-field">
+        <label for="grid-input">Maidenhead grid locator</label>
+        <input type="text" id="grid-input" placeholder="e.g. FN31pr" />
+      </div>
+      <p style="text-align:center;color:var(--muted);margin:0.5rem 0;">or</p>
+      <div style="display:flex;gap:0.5rem;">
+        <div class="tool-field" style="flex:1;">
+          <label for="lat-input">Latitude</label>
+          <input type="text" id="lat-input" placeholder="e.g. 41.19" />
+        </div>
+        <div class="tool-field" style="flex:1;">
+          <label for="lon-input">Longitude</label>
+          <input type="text" id="lon-input" placeholder="e.g. -73.14" />
+        </div>
+      </div>
+      <p style="text-align:center;color:var(--muted);margin:0.5rem 0;">or</p>
+      <div class="tool-field">
+        <label for="geo-input">City, state, ZIP, or address</label>
+        <div style="display:flex;gap:0.5rem;">
+          <input type="text" id="geo-input" placeholder="e.g. Stratford, CT or 06614" style="flex:1;" />
+          <button type="button" class="btn secondary" id="geo-lookup-btn" style="white-space:nowrap;">Look Up</button>
+        </div>
+      </div>
+      <button type="button" class="btn secondary" id="geo-locate-btn" style="width:100%;">📍 Use My Location</button>
+      <p class="status-line" id="geo-status"></p>
+      <div class="tool-result" id="grid-result" hidden>
+        <div class="big" id="grid-result-value">&mdash;</div>
+        <div class="sub" id="grid-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Distance &amp; Bearing</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div class="tool-field">
+        <label for="dist-from">From grid square</label>
+        <input type="text" id="dist-from" placeholder="e.g. FN31pr" />
+      </div>
+      <div class="tool-field">
+        <label for="dist-to">To grid square</label>
+        <input type="text" id="dist-to" placeholder="e.g. IO91wm" />
+      </div>
+      <div class="tool-result" id="dist-result" hidden>
+        <div class="big" id="dist-result-value">&mdash;</div>
+        <div class="sub" id="dist-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Antenna Length</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div class="tool-field">
+        <label for="ant-type">Antenna type</label>
+        <select id="ant-type">
+          <option value="dipole">Half-wave dipole</option>
+          <option value="efhw">End-Fed Half-Wave (EFHW)</option>
+          <option value="ocf">Off-Center-Fed (OCF) dipole</option>
+          <option value="vertical">Quarter-wave vertical</option>
+          <option value="fivezeroeighth">5/8-wave vertical (VHF/UHF)</option>
+          <option value="edz">Extended Double Zepp</option>
+          <option value="loop">Full-wave loop</option>
+        </select>
+      </div>
+      <div class="tool-field">
+        <label for="ant-freq">Frequency (MHz)</label>
+        <input type="text" id="ant-freq" placeholder="e.g. 14.175" />
+      </div>
+      <div class="tool-result" id="ant-result" hidden>
+        <div class="big" id="ant-result-value">&mdash;</div>
+        <div class="sub" id="ant-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>SWR Calculator</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div class="tool-field">
+        <label for="swr-fwd">Forward power (W)</label>
+        <input type="text" id="swr-fwd" placeholder="e.g. 100" />
+      </div>
+      <div class="tool-field">
+        <label for="swr-ref">Reflected power (W)</label>
+        <input type="text" id="swr-ref" placeholder="e.g. 4" />
+      </div>
+      <div class="tool-result" id="swr-result" hidden>
+        <div class="big" id="swr-result-value">&mdash;</div>
+        <div class="sub" id="swr-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Coax Feedline Loss</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div class="tool-field">
+        <label for="coax-type">Cable type</label>
+        <select id="coax-type">
+          <option value="RG-58">RG-58</option>
+          <option value="RG-8X">RG-8X</option>
+          <option value="RG-213">RG-213 / RG-8</option>
+          <option value="LMR-400">LMR-400</option>
+          <option value="LMR-600">LMR-600</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:0.5rem;">
+        <div class="tool-field" style="flex:1;">
+          <label for="coax-freq">Frequency (MHz)</label>
+          <input type="text" id="coax-freq" placeholder="e.g. 14.175" />
+        </div>
+        <div class="tool-field" style="flex:1;">
+          <label for="coax-length">Length (ft)</label>
+          <input type="text" id="coax-length" placeholder="e.g. 100" />
+        </div>
+      </div>
+      <div class="tool-result" id="coax-result" hidden>
+        <div class="big" id="coax-result-value">&mdash;</div>
+        <div class="sub" id="coax-result-sub">Nominal figures &mdash; check your cable's datasheet for exact specs.</div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Resistor Color Code</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div class="tool-field">
+        <label for="res-bands">Bands</label>
+        <select id="res-bands">
+          <option value="4">4-band</option>
+          <option value="5">5-band</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <div class="tool-field" style="flex:1;min-width:100px;">
+          <label for="res-1">Band 1</label>
+          <select id="res-1"></select>
+        </div>
+        <div class="tool-field" style="flex:1;min-width:100px;">
+          <label for="res-2">Band 2</label>
+          <select id="res-2"></select>
+        </div>
+        <div class="tool-field" id="res-3-field" style="flex:1;min-width:100px;" hidden>
+          <label for="res-3">Band 3</label>
+          <select id="res-3"></select>
+        </div>
+        <div class="tool-field" style="flex:1;min-width:100px;">
+          <label for="res-mult">Multiplier</label>
+          <select id="res-mult"></select>
+        </div>
+        <div class="tool-field" style="flex:1;min-width:100px;">
+          <label for="res-tol">Tolerance</label>
+          <select id="res-tol"></select>
+        </div>
+      </div>
+      <div class="tool-result" id="res-result" hidden>
+        <div class="big" id="res-result-value">&mdash;</div>
+        <div class="sub" id="res-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Ohm's Law</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <p style="margin:0 0 0.75rem;color:var(--muted);font-size:0.85rem;">Enter any two values to solve for the rest.</p>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <div class="tool-field" style="flex:1;min-width:100px;">
+          <label for="ohm-v">Voltage (V)</label>
+          <input type="text" id="ohm-v" placeholder="volts" />
+        </div>
+        <div class="tool-field" style="flex:1;min-width:100px;">
+          <label for="ohm-i">Current (A)</label>
+          <input type="text" id="ohm-i" placeholder="amps" />
+        </div>
+        <div class="tool-field" style="flex:1;min-width:100px;">
+          <label for="ohm-r">Resistance (Ω)</label>
+          <input type="text" id="ohm-r" placeholder="ohms" />
+        </div>
+        <div class="tool-field" style="flex:1;min-width:100px;">
+          <label for="ohm-p">Power (W)</label>
+          <input type="text" id="ohm-p" placeholder="watts" />
+        </div>
+      </div>
+      <div class="tool-result" id="ohm-result" hidden>
+        <div class="big" id="ohm-result-value">&mdash;</div>
+        <div class="sub" id="ohm-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>dBm / Watts / Volts</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div style="display:flex;gap:0.5rem;">
+        <div class="tool-field" style="flex:1;">
+          <label for="dbm-dbm">Power (dBm)</label>
+          <input type="text" id="dbm-dbm" placeholder="e.g. 37" />
+        </div>
+        <div class="tool-field" style="flex:1;">
+          <label for="dbm-watts">Power (W)</label>
+          <input type="text" id="dbm-watts" placeholder="e.g. 5" />
+        </div>
+      </div>
+      <div class="tool-field">
+        <label for="dbm-z">Impedance (Ω)</label>
+        <input type="text" id="dbm-z" value="50" />
+      </div>
+      <div class="tool-result" id="dbm-result" hidden>
+        <div class="big" id="dbm-result-value">&mdash;</div>
+        <div class="sub" id="dbm-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>LED Series Resistor</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div style="display:flex;gap:0.5rem;">
+        <div class="tool-field" style="flex:1;">
+          <label for="led-vs">Supply (V)</label>
+          <input type="text" id="led-vs" placeholder="e.g. 5" />
+        </div>
+        <div class="tool-field" style="flex:1;">
+          <label for="led-vf">LED Vf (V)</label>
+          <input type="text" id="led-vf" placeholder="e.g. 2.0" />
+        </div>
+        <div class="tool-field" style="flex:1;">
+          <label for="led-if">LED If (mA)</label>
+          <input type="text" id="led-if" value="20" />
+        </div>
+      </div>
+      <div class="tool-result" id="led-result" hidden>
+        <div class="big" id="led-result-value">&mdash;</div>
+        <div class="sub" id="led-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Voltage Divider</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div style="display:flex;gap:0.5rem;">
+        <div class="tool-field" style="flex:1;">
+          <label for="vdiv-vin">Vin (V)</label>
+          <input type="text" id="vdiv-vin" placeholder="e.g. 12" />
+        </div>
+        <div class="tool-field" style="flex:1;">
+          <label for="vdiv-r1">R1 (Ω)</label>
+          <input type="text" id="vdiv-r1" placeholder="e.g. 1000" />
+        </div>
+        <div class="tool-field" style="flex:1;">
+          <label for="vdiv-r2">R2 (Ω)</label>
+          <input type="text" id="vdiv-r2" placeholder="e.g. 2000" />
+        </div>
+      </div>
+      <div class="tool-result" id="vdiv-result" hidden>
+        <div class="big" id="vdiv-result-value">&mdash;</div>
+        <div class="sub" id="vdiv-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Capacitor Code</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div style="display:flex;gap:0.5rem;">
+        <div class="tool-field" style="flex:1;">
+          <label for="cap-code">EIA code</label>
+          <input type="text" id="cap-code" placeholder="e.g. 104" />
+        </div>
+        <div class="tool-field" style="flex:1;">
+          <label for="cap-tol">Tolerance</label>
+          <select id="cap-tol">
+            <option value="">None</option>
+            <option value="B">B (±0.1pF)</option>
+            <option value="C">C (±0.25pF)</option>
+            <option value="D">D (±0.5pF)</option>
+            <option value="F">F (±1%)</option>
+            <option value="G">G (±2%)</option>
+            <option value="H">H (±3%)</option>
+            <option value="J">J (±5%)</option>
+            <option value="K">K (±10%)</option>
+            <option value="M">M (±20%)</option>
+            <option value="Z">Z (+80%/-20%)</option>
+          </select>
+        </div>
+      </div>
+      <div class="tool-result" id="cap-result" hidden>
+        <div class="big" id="cap-result-value">&mdash;</div>
+        <div class="sub" id="cap-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Wavelength &amp; Frequency</span><button type="button" class="tool-reset-btn">Reset</button></h2>
+      <div style="display:flex;gap:0.5rem;">
+        <div class="tool-field" style="flex:1;">
+          <label for="wl-freq">Frequency (MHz)</label>
+          <input type="text" id="wl-freq" placeholder="e.g. 146.52" />
+        </div>
+        <div class="tool-field" style="flex:1;">
+          <label for="wl-meters">Wavelength (m)</label>
+          <input type="text" id="wl-meters" placeholder="e.g. 2" />
+        </div>
+      </div>
+      <div class="tool-result" id="wl-result" hidden>
+        <div class="big" id="wl-result-value">&mdash;</div>
+        <div class="sub" id="wl-result-sub"></div>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Have I Worked This Call?</span><button type="button" class="tool-reset-btn" id="call-reset-btn">Reset</button></h2>
+      <div class="tool-field">
+        <label for="call-search">Callsign</label>
+        <input type="text" id="call-search" placeholder="e.g. W1AW" />
+      </div>
+      <p id="call-status" class="status-line"></p>
+      <div id="call-results"></div>
+    </div>
+
+    <div class="tool-card">
+      <h2>Export Log</h2>
+      <p style="margin:0 0 1rem;color:var(--muted);font-size:0.9rem;">Download every QSO on file &mdash; a backup independent of LoTW/QRZ. Admin login required.</p>
+      <div id="export-login">
+        <form id="export-login-form" style="display:flex;flex-direction:column;gap:0.75rem;max-width:280px;">
+          <input type="password" id="export-password" placeholder="Admin password" autocomplete="current-password" required />
+          <p id="export-login-status" class="status-line"></p>
+          <button type="submit" class="btn" style="align-self:flex-start;">Log in</button>
+        </form>
+      </div>
+      <div id="export-buttons" style="display:flex;gap:0.75rem;flex-wrap:wrap;" hidden>
+        <button type="button" class="btn" id="export-adi-btn">Download ADIF</button>
+        <button type="button" class="btn secondary" id="export-csv-btn">Download CSV</button>
+      </div>
+      <p class="status-line" id="export-status"></p>
+    </div>
+
+    <div class="tool-card">
+      <h2><span>Club Log OQRS Check</span><button type="button" class="tool-reset-btn" id="oqrs-reset-btn">Reset</button></h2>
+      <p style="margin:0 0 0.75rem;color:var(--muted);font-size:0.85rem;">Worked stations whose operator has Club Log's Online QSL Request System enabled &mdash; a checklist to visit and see if you've missed requesting a card. This can't tell whether you've already requested one, and not every station with a Club Log account has OQRS turned on.</p>
+      <div class="status-filter" role="group" aria-label="Filter by confirmation status">
+        <button type="button" class="status-btn active" data-status="all">All</button>
+        <button type="button" class="status-btn" data-status="confirmed">LoTW Confirmed</button>
+        <button type="button" class="status-btn" data-status="pending">Not Confirmed</button>
+      </div>
+      <input type="text" id="oqrs-search" class="entity-search" placeholder="Search calls…" />
+      <div class="entity-list" id="oqrs-list"></div>
+      <p class="status-line" id="oqrs-synced"></p>
+    </div>
+  </div>
+
+  <script>
+    import { gridToLatLon, latLonToGrid, distanceKm, bearingDeg } from '../lib/maidenhead';
+    import { downloadOrShareBlob } from '../lib/downloadImage';
+
+    // --- Grid <-> Lat/Lon ---
+    const gridInput = document.getElementById('grid-input') as HTMLInputElement;
+    const latInput = document.getElementById('lat-input') as HTMLInputElement;
+    const lonInput = document.getElementById('lon-input') as HTMLInputElement;
+    const gridResult = document.getElementById('grid-result')!;
+    const gridResultValue = document.getElementById('grid-result-value')!;
+    const gridResultSub = document.getElementById('grid-result-sub')!;
+
+    gridInput.addEventListener('input', () => {
+      const value = gridInput.value.trim();
+      if (!value) { gridResult.hidden = true; return; }
+      const pos = gridToLatLon(value);
+      if (!pos) {
+        gridResult.hidden = false;
+        gridResultValue.textContent = 'Invalid grid';
+        gridResultSub.textContent = '';
+        return;
+      }
+      gridResult.hidden = false;
+      gridResultValue.textContent = `${pos.lat.toFixed(4)}, ${pos.lon.toFixed(4)}`;
+      gridResultSub.textContent = 'Center of grid square';
+      latInput.value = '';
+      lonInput.value = '';
+    });
+
+    function convertLatLon() {
+      const lat = Number(latInput.value);
+      const lon = Number(lonInput.value);
+      if (!latInput.value || !lonInput.value || Number.isNaN(lat) || Number.isNaN(lon)) {
+        gridResult.hidden = true;
+        return;
+      }
+      const grid = latLonToGrid(lat, lon);
+      gridResult.hidden = false;
+      gridResultValue.textContent = grid ?? 'Invalid coordinates';
+      gridResultSub.textContent = grid ? '6-character grid square' : '';
+      gridInput.value = '';
+    }
+    latInput.addEventListener('input', convertLatLon);
+    lonInput.addEventListener('input', convertLatLon);
+
+    // --- Grid from city/state/ZIP/address (server-proxied geocoding) ---
+    const geoInput = document.getElementById('geo-input') as HTMLInputElement;
+    const geoLookupBtn = document.getElementById('geo-lookup-btn') as HTMLButtonElement;
+    const geoLocateBtn = document.getElementById('geo-locate-btn') as HTMLButtonElement;
+    const geoStatus = document.getElementById('geo-status')!;
+
+    async function lookupGeo() {
+      const q = geoInput.value.trim();
+      if (!q) return;
+      geoStatus.textContent = 'Looking up…';
+      try {
+        const res = await fetch(`/api/geocode?q=${encodeURIComponent(q)}`);
+        const data: { lat: number; lon: number; displayName: string } | null = await res.json();
+        if (!data) {
+          geoStatus.textContent = `Could not find "${q}".`;
+          return;
+        }
+        latInput.value = String(data.lat);
+        lonInput.value = String(data.lon);
+        convertLatLon();
+        geoStatus.textContent = data.displayName;
+      } catch {
+        geoStatus.textContent = 'Lookup failed — try again.';
+      }
+    }
+    geoLookupBtn.addEventListener('click', lookupGeo);
+    geoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') lookupGeo(); });
+
+    geoLocateBtn.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        geoStatus.textContent = 'Geolocation is not supported by this browser.';
+        return;
+      }
+      geoStatus.textContent = 'Getting your location…';
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          latInput.value = pos.coords.latitude.toFixed(5);
+          lonInput.value = pos.coords.longitude.toFixed(5);
+          geoInput.value = '';
+          convertLatLon();
+          geoStatus.textContent = `Located within ${Math.round(pos.coords.accuracy)} m.`;
+        },
+        (err) => {
+          geoStatus.textContent = `Could not get location: ${err.message}`;
+        },
+        { enableHighAccuracy: true, timeout: 10000 },
+      );
+    });
+
+    // --- Distance & bearing ---
+    const distFrom = document.getElementById('dist-from') as HTMLInputElement;
+    const distTo = document.getElementById('dist-to') as HTMLInputElement;
+    const distResult = document.getElementById('dist-result')!;
+    const distResultValue = document.getElementById('dist-result-value')!;
+    const distResultSub = document.getElementById('dist-result-sub')!;
+
+    const COMPASS = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+    function compassPoint(deg: number): string {
+      return COMPASS[Math.round(deg / 22.5) % 16];
+    }
+
+    function computeDistance() {
+      const from = gridToLatLon(distFrom.value.trim());
+      const to = gridToLatLon(distTo.value.trim());
+      if (!distFrom.value || !distTo.value) { distResult.hidden = true; return; }
+      if (!from || !to) {
+        distResult.hidden = false;
+        distResultValue.textContent = 'Invalid grid square(s)';
+        distResultSub.textContent = '';
+        return;
+      }
+      const km = distanceKm(from, to);
+      const bearing = bearingDeg(from, to);
+      distResult.hidden = false;
+      distResultValue.textContent = `${Math.round(km * 0.621371).toLocaleString()} mi`;
+      distResultSub.textContent = `${Math.round(km).toLocaleString()} km · bearing ${Math.round(bearing)}° (${compassPoint(bearing)})`;
+    }
+    distFrom.addEventListener('input', computeDistance);
+    distTo.addEventListener('input', computeDistance);
+
+    // --- Antenna length ---
+    const antType = document.getElementById('ant-type') as HTMLSelectElement;
+    const antFreq = document.getElementById('ant-freq') as HTMLInputElement;
+    const antResult = document.getElementById('ant-result')!;
+    const antResultValue = document.getElementById('ant-result-value')!;
+    const antResultSub = document.getElementById('ant-result-sub')!;
+
+    type AntType = { label: string; k: number; note: (feet: number) => string };
+    const ANT_TYPES: Record<string, AntType> = {
+      dipole: {
+        label: 'Half-wave dipole (total length)',
+        k: 468,
+        note: (feet) => `${(feet / 2).toFixed(2)} ft per leg`,
+      },
+      efhw: {
+        label: 'End-Fed Half-Wave (total length)',
+        k: 468,
+        note: () => `Same length as a dipole, fed at one end via a 49:1 or 64:1 unun`,
+      },
+      ocf: {
+        label: 'Off-Center-Fed dipole (total length)',
+        k: 468,
+        note: (feet) => `${(feet / 3).toFixed(2)} ft / ${((feet * 2) / 3).toFixed(2)} ft split (1:2), fed via 4:1 or 6:1 balun`,
+      },
+      vertical: {
+        label: 'Quarter-wave vertical',
+        k: 234,
+        note: () => `Pair with 3–4 ground/elevated radials of similar or slightly greater length`,
+      },
+      fivezeroeighth: {
+        label: '5/8-wave vertical (VHF/UHF gain vertical)',
+        k: 585,
+        note: () => `Needs a matching network — feedpoint isn't a clean 50Ω`,
+      },
+      edz: {
+        label: 'Extended Double Zepp (total length, ~1.25λ)',
+        k: 1150,
+        note: (feet) => `${(feet / 2).toFixed(2)} ft per leg, fed with ladder line + tuner — ~3 dB gain over a dipole broadside to the wire. Typical design value; several published variants exist.`,
+      },
+      loop: {
+        label: 'Full-wave loop (total length)',
+        k: 1005,
+        note: (feet) => `Delta loop: ${(feet / 3).toFixed(2)} ft/side · Quad loop: ${(feet / 4).toFixed(2)} ft/side`,
+      },
+    };
+
+    function computeAntenna() {
+      const freq = Number(antFreq.value);
+      if (!antFreq.value || Number.isNaN(freq) || freq <= 0) { antResult.hidden = true; return; }
+      const type = ANT_TYPES[antType.value];
+      const feet = type.k / freq;
+      const meters = feet * 0.3048;
+      antResult.hidden = false;
+      antResultValue.textContent = `${feet.toFixed(2)} ft`;
+      antResultSub.textContent = `${meters.toFixed(2)} m · ${type.label} · ${type.note(feet)}`;
+    }
+    antFreq.addEventListener('input', computeAntenna);
+    antType.addEventListener('change', computeAntenna);
+
+    // --- SWR ---
+    const swrFwd = document.getElementById('swr-fwd') as HTMLInputElement;
+    const swrRef = document.getElementById('swr-ref') as HTMLInputElement;
+    const swrResult = document.getElementById('swr-result')!;
+    const swrResultValue = document.getElementById('swr-result-value')!;
+    const swrResultSub = document.getElementById('swr-result-sub')!;
+
+    function computeSwr() {
+      const fwd = Number(swrFwd.value);
+      const ref = Number(swrRef.value);
+      if (!swrFwd.value || !swrRef.value || Number.isNaN(fwd) || Number.isNaN(ref) || fwd <= 0) {
+        swrResult.hidden = true;
+        return;
+      }
+      if (ref < 0 || ref > fwd) {
+        swrResult.hidden = false;
+        swrResultValue.textContent = 'Invalid readings';
+        swrResultSub.textContent = 'Reflected power can\'t exceed forward power.';
+        return;
+      }
+      const rho = Math.sqrt(ref / fwd);
+      const swr = rho >= 1 ? Infinity : (1 + rho) / (1 - rho);
+      const returnLoss = ref > 0 ? 10 * Math.log10(fwd / ref) : Infinity;
+      swrResult.hidden = false;
+      swrResultValue.textContent = Number.isFinite(swr) ? `${swr.toFixed(2)}:1` : '∞:1';
+      swrResultSub.textContent = `${(fwd - ref).toFixed(1)} W delivered · return loss ${Number.isFinite(returnLoss) ? returnLoss.toFixed(1) + ' dB' : '∞'}`;
+    }
+    swrFwd.addEventListener('input', computeSwr);
+    swrRef.addEventListener('input', computeSwr);
+
+    // --- Coax feedline loss ---
+    // Nominal attenuation in dB per 100ft at reference frequencies (MHz),
+    // drawn from commonly published manufacturer figures. Log-log
+    // interpolated between points — treat as typical, not exact.
+    const COAX_LOSS: Record<string, Record<number, number>> = {
+      'RG-58': { 1.8: 0.3, 3.5: 0.4, 7: 0.6, 14: 0.8, 21: 1.0, 28: 1.2, 50: 1.5, 144: 2.7, 440: 4.9 },
+      'RG-8X': { 1.8: 0.2, 3.5: 0.3, 7: 0.4, 14: 0.6, 21: 0.7, 28: 0.8, 50: 1.1, 144: 2.1, 440: 3.9 },
+      'RG-213': { 1.8: 0.1, 3.5: 0.2, 7: 0.25, 14: 0.35, 21: 0.45, 28: 0.5, 50: 0.7, 144: 1.3, 440: 2.5 },
+      'LMR-400': { 1.8: 0.04, 3.5: 0.06, 7: 0.09, 14: 0.13, 21: 0.16, 28: 0.19, 50: 0.25, 144: 0.44, 440: 0.79 },
+      'LMR-600': { 1.8: 0.025, 3.5: 0.035, 7: 0.05, 14: 0.075, 21: 0.09, 28: 0.11, 50: 0.15, 144: 0.26, 440: 0.47 },
+    };
+
+    function lossPer100ft(cable: string, freqMhz: number): number {
+      const table = COAX_LOSS[cable];
+      const points = Object.keys(table).map(Number).sort((a, b) => a - b);
+      const clamped = Math.min(Math.max(freqMhz, points[0]), points[points.length - 1]);
+      let lo = points[0];
+      let hi = points[points.length - 1];
+      for (let i = 0; i < points.length - 1; i++) {
+        if (clamped >= points[i] && clamped <= points[i + 1]) {
+          lo = points[i];
+          hi = points[i + 1];
+          break;
+        }
+      }
+      if (lo === hi) return table[lo];
+      const logLo = Math.log(lo), logHi = Math.log(hi), logF = Math.log(clamped);
+      const t = (logF - logLo) / (logHi - logLo);
+      return table[lo] + t * (table[hi] - table[lo]);
+    }
+
+    const coaxType = document.getElementById('coax-type') as HTMLSelectElement;
+    const coaxFreq = document.getElementById('coax-freq') as HTMLInputElement;
+    const coaxLength = document.getElementById('coax-length') as HTMLInputElement;
+    const coaxResult = document.getElementById('coax-result')!;
+    const coaxResultValue = document.getElementById('coax-result-value')!;
+
+    function computeCoax() {
+      const freq = Number(coaxFreq.value);
+      const length = Number(coaxLength.value);
+      if (!coaxFreq.value || !coaxLength.value || Number.isNaN(freq) || Number.isNaN(length) || freq <= 0 || length <= 0) {
+        coaxResult.hidden = true;
+        return;
+      }
+      const per100 = lossPer100ft(coaxType.value, freq);
+      const totalDb = per100 * (length / 100);
+      const powerPct = 100 * Math.pow(10, -totalDb / 10);
+      coaxResult.hidden = false;
+      coaxResultValue.textContent = `${totalDb.toFixed(2)} dB`;
+      document.getElementById('coax-result-sub')!.innerHTML = `${powerPct.toFixed(0)}% of power reaches the antenna &middot; Nominal figures &mdash; check your cable's datasheet for exact specs.`;
+    }
+    coaxType.addEventListener('change', computeCoax);
+    coaxFreq.addEventListener('input', computeCoax);
+    coaxLength.addEventListener('input', computeCoax);
+
+    // --- Resistor color code ---
+    type ResColor = { name: string; digit?: number; mult?: number; tol?: number };
+    const RESISTOR_COLORS: ResColor[] = [
+      { name: 'Black', digit: 0, mult: 1 },
+      { name: 'Brown', digit: 1, mult: 10, tol: 1 },
+      { name: 'Red', digit: 2, mult: 100, tol: 2 },
+      { name: 'Orange', digit: 3, mult: 1000 },
+      { name: 'Yellow', digit: 4, mult: 10000 },
+      { name: 'Green', digit: 5, mult: 100000, tol: 0.5 },
+      { name: 'Blue', digit: 6, mult: 1000000, tol: 0.25 },
+      { name: 'Violet', digit: 7, mult: 10000000, tol: 0.1 },
+      { name: 'Grey', digit: 8, mult: 100000000, tol: 0.05 },
+      { name: 'White', digit: 9, mult: 1000000000 },
+      { name: 'Gold', mult: 0.1, tol: 5 },
+      { name: 'Silver', mult: 0.01, tol: 10 },
+    ];
+    const colorByName = (name: string) => RESISTOR_COLORS.find((c) => c.name === name)!;
+    const DIGIT_COLORS = RESISTOR_COLORS.filter((c) => c.digit !== undefined);
+    const MULT_COLORS = RESISTOR_COLORS.filter((c) => c.mult !== undefined);
+    const TOL_COLORS = RESISTOR_COLORS.filter((c) => c.tol !== undefined);
+
+    const resBandsSelect = document.getElementById('res-bands') as HTMLSelectElement;
+    const res1 = document.getElementById('res-1') as HTMLSelectElement;
+    const res2 = document.getElementById('res-2') as HTMLSelectElement;
+    const res3 = document.getElementById('res-3') as HTMLSelectElement;
+    const res3Field = document.getElementById('res-3-field')!;
+    const resMult = document.getElementById('res-mult') as HTMLSelectElement;
+    const resTol = document.getElementById('res-tol') as HTMLSelectElement;
+    const resResult = document.getElementById('res-result')!;
+    const resResultValue = document.getElementById('res-result-value')!;
+    const resResultSub = document.getElementById('res-result-sub')!;
+
+    function populateSelect(select: HTMLSelectElement, colors: ResColor[]) {
+      select.innerHTML = colors.map((c) => `<option value="${c.name}">${c.name}</option>`).join('');
+    }
+    populateSelect(res1, DIGIT_COLORS);
+    populateSelect(res2, DIGIT_COLORS);
+    populateSelect(res3, DIGIT_COLORS);
+    populateSelect(resMult, MULT_COLORS);
+    resTol.innerHTML =
+      '<option value="None">None (±20%)</option>' +
+      TOL_COLORS.map((c) => `<option value="${c.name}">${c.name} (±${c.tol}%)</option>`).join('');
+    res1.value = 'Brown';
+    res2.value = 'Black';
+    res3.value = 'Black';
+    resMult.value = 'Red';
+    resTol.value = 'Gold';
+
+    function formatOhms(ohms: number): string {
+      const trim = (n: number) => n.toFixed(2).replace(/\.?0+$/, '');
+      if (ohms >= 1e6) return `${trim(ohms / 1e6)} MΩ`;
+      if (ohms >= 1e3) return `${trim(ohms / 1e3)} kΩ`;
+      return `${trim(ohms)} Ω`;
+    }
+
+    function computeResistor() {
+      const bands = Number(resBandsSelect.value);
+      res3Field.hidden = bands !== 5;
+      const c1 = colorByName(res1.value);
+      const c2 = colorByName(res2.value);
+      const mult = colorByName(resMult.value);
+      const tol = resTol.value === 'None' ? 20 : colorByName(resTol.value).tol!;
+      const digits = bands === 5 ? c1.digit! * 100 + c2.digit! * 10 + colorByName(res3.value).digit! : c1.digit! * 10 + c2.digit!;
+      const ohms = digits * mult.mult!;
+      resResult.hidden = false;
+      resResultValue.textContent = formatOhms(ohms);
+      resResultSub.textContent = `±${tol}% tolerance`;
+    }
+    [resBandsSelect, res1, res2, res3, resMult, resTol].forEach((el) => el.addEventListener('change', computeResistor));
+    computeResistor();
+
+    // --- Ohm's Law ---
+    const ohmV = document.getElementById('ohm-v') as HTMLInputElement;
+    const ohmI = document.getElementById('ohm-i') as HTMLInputElement;
+    const ohmR = document.getElementById('ohm-r') as HTMLInputElement;
+    const ohmP = document.getElementById('ohm-p') as HTMLInputElement;
+    const ohmResult = document.getElementById('ohm-result')!;
+    const ohmResultValue = document.getElementById('ohm-result-value')!;
+    const ohmResultSub = document.getElementById('ohm-result-sub')!;
+
+    function computeOhm() {
+      const raw = { v: ohmV.value, i: ohmI.value, r: ohmR.value, p: ohmP.value };
+      const vals = { v: Number(raw.v), i: Number(raw.i), r: Number(raw.r), p: Number(raw.p) };
+      const known = (Object.keys(raw) as (keyof typeof raw)[]).filter((k) => raw[k] !== '' && !Number.isNaN(vals[k]));
+      if (known.length < 2) { ohmResult.hidden = true; return; }
+      const pair = known.slice(0, 2).sort().join('');
+      let { v, i, r, p } = vals;
+      if (pair === 'iv') { r = v / i; p = v * i; }
+      else if (pair === 'rv') { i = v / r; p = (v * v) / r; }
+      else if (pair === 'pv') { i = p / v; r = (v * v) / p; }
+      else if (pair === 'ir') { v = i * r; p = i * i * r; }
+      else if (pair === 'ip') { v = p / i; r = p / (i * i); }
+      else if (pair === 'pr') { v = Math.sqrt(p * r); i = Math.sqrt(p / r); }
+      else { ohmResult.hidden = true; return; }
+      ohmResult.hidden = false;
+      ohmResultValue.textContent = `V=${v.toFixed(3)}  I=${i.toFixed(3)}  R=${r.toFixed(3)}`;
+      ohmResultSub.textContent = `P = ${p.toFixed(3)} W`;
+    }
+    [ohmV, ohmI, ohmR, ohmP].forEach((el) => el.addEventListener('input', computeOhm));
+
+    // --- dBm / Watts / Volts ---
+    const dbmDbm = document.getElementById('dbm-dbm') as HTMLInputElement;
+    const dbmWatts = document.getElementById('dbm-watts') as HTMLInputElement;
+    const dbmZ = document.getElementById('dbm-z') as HTMLInputElement;
+    const dbmResult = document.getElementById('dbm-result')!;
+    const dbmResultValue = document.getElementById('dbm-result-value')!;
+    const dbmResultSub = document.getElementById('dbm-result-sub')!;
+
+    function updateDbmResult(dbm: number, w: number) {
+      const z = Number(dbmZ.value) || 50;
+      const vrms = Math.sqrt(w * z);
+      const vpp = vrms * 2 * Math.SQRT2;
+      dbmResult.hidden = false;
+      dbmResultValue.textContent = w >= 1 ? `${w.toFixed(3)} W` : `${(w * 1000).toFixed(2)} mW`;
+      dbmResultSub.textContent = `${dbm.toFixed(2)} dBm · ${vrms.toFixed(3)} Vrms / ${vpp.toFixed(3)} Vpp into ${z}Ω`;
+    }
+    function computeDbmFromDbm() {
+      const dbm = Number(dbmDbm.value);
+      if (!dbmDbm.value || Number.isNaN(dbm)) { dbmResult.hidden = true; return; }
+      const w = Math.pow(10, dbm / 10) / 1000;
+      dbmWatts.value = w >= 1 ? w.toFixed(3) : w.toFixed(6);
+      updateDbmResult(dbm, w);
+    }
+    function computeDbmFromWatts() {
+      const w = Number(dbmWatts.value);
+      if (!dbmWatts.value || Number.isNaN(w) || w <= 0) { dbmResult.hidden = true; return; }
+      const dbm = 10 * Math.log10(w * 1000);
+      dbmDbm.value = dbm.toFixed(2);
+      updateDbmResult(dbm, w);
+    }
+    dbmDbm.addEventListener('input', computeDbmFromDbm);
+    dbmWatts.addEventListener('input', computeDbmFromWatts);
+    dbmZ.addEventListener('input', () => { if (dbmDbm.value) computeDbmFromDbm(); });
+
+    // --- LED series resistor ---
+    const ledVs = document.getElementById('led-vs') as HTMLInputElement;
+    const ledVf = document.getElementById('led-vf') as HTMLInputElement;
+    const ledIf = document.getElementById('led-if') as HTMLInputElement;
+    const ledResult = document.getElementById('led-result')!;
+    const ledResultValue = document.getElementById('led-result-value')!;
+    const ledResultSub = document.getElementById('led-result-sub')!;
+
+    const E12_BASE = [1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2];
+    function nearestE12(r: number): string {
+      const exp = Math.floor(Math.log10(r));
+      let best = Infinity;
+      for (let e = exp - 1; e <= exp + 2; e++) {
+        for (const base of E12_BASE) {
+          const val = base * Math.pow(10, e);
+          if (val >= r && val < best) best = val;
+        }
+      }
+      return best >= 1000 ? `${(best / 1000).toFixed(1)}k` : best.toFixed(best < 10 ? 1 : 0);
+    }
+
+    function computeLed() {
+      const vs = Number(ledVs.value);
+      const vf = Number(ledVf.value);
+      const ifMa = Number(ledIf.value);
+      if (!ledVs.value || !ledVf.value || !ledIf.value || Number.isNaN(vs) || Number.isNaN(vf) || Number.isNaN(ifMa) || ifMa <= 0) {
+        ledResult.hidden = true;
+        return;
+      }
+      if (vs <= vf) {
+        ledResult.hidden = false;
+        ledResultValue.textContent = 'Supply too low';
+        ledResultSub.textContent = 'Supply voltage must exceed the LED forward voltage.';
+        return;
+      }
+      const iAmps = ifMa / 1000;
+      const r = (vs - vf) / iAmps;
+      const p = iAmps * iAmps * r;
+      ledResult.hidden = false;
+      ledResultValue.textContent = `${r.toFixed(1)} Ω`;
+      ledResultSub.textContent = `${(p * 1000).toFixed(1)} mW dissipated · nearest standard value ${nearestE12(r)} Ω`;
+    }
+    [ledVs, ledVf, ledIf].forEach((el) => el.addEventListener('input', computeLed));
+
+    // --- Voltage divider ---
+    const vdivVin = document.getElementById('vdiv-vin') as HTMLInputElement;
+    const vdivR1 = document.getElementById('vdiv-r1') as HTMLInputElement;
+    const vdivR2 = document.getElementById('vdiv-r2') as HTMLInputElement;
+    const vdivResult = document.getElementById('vdiv-result')!;
+    const vdivResultValue = document.getElementById('vdiv-result-value')!;
+    const vdivResultSub = document.getElementById('vdiv-result-sub')!;
+
+    function computeVdiv() {
+      const vin = Number(vdivVin.value);
+      const r1 = Number(vdivR1.value);
+      const r2 = Number(vdivR2.value);
+      if (!vdivVin.value || !vdivR1.value || !vdivR2.value || Number.isNaN(vin) || Number.isNaN(r1) || Number.isNaN(r2) || r1 < 0 || r2 <= 0) {
+        vdivResult.hidden = true;
+        return;
+      }
+      const vout = vin * (r2 / (r1 + r2));
+      const current = vin / (r1 + r2);
+      vdivResult.hidden = false;
+      vdivResultValue.textContent = `${vout.toFixed(3)} V`;
+      vdivResultSub.textContent = `${(current * 1000).toFixed(3)} mA through the divider`;
+    }
+    [vdivVin, vdivR1, vdivR2].forEach((el) => el.addEventListener('input', computeVdiv));
+
+    // --- Capacitor code ---
+    const CAP_TOL_LABELS: Record<string, string> = {
+      B: '±0.1pF', C: '±0.25pF', D: '±0.5pF', F: '±1%', G: '±2%', H: '±3%', J: '±5%', K: '±10%', M: '±20%', Z: '+80%/-20%',
+    };
+    const capCode = document.getElementById('cap-code') as HTMLInputElement;
+    const capTol = document.getElementById('cap-tol') as HTMLSelectElement;
+    const capResult = document.getElementById('cap-result')!;
+    const capResultValue = document.getElementById('cap-result-value')!;
+    const capResultSub = document.getElementById('cap-result-sub')!;
+
+    function formatPf(pf: number): string {
+      const trim = (n: number) => n.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+      if (pf >= 1e6) return `${trim(pf / 1e6)} µF`;
+      if (pf >= 1e3) return `${trim(pf / 1e3)} nF`;
+      return `${trim(pf)} pF`;
+    }
+
+    function computeCap() {
+      const raw = capCode.value.trim().toUpperCase();
+      const match = raw.match(/^(\d{1,4})([A-Z]?)$/);
+      if (!raw || !match) { capResult.hidden = true; return; }
+      const digits = match[1];
+      const inlineTol = match[2];
+      let pf: number;
+      if (digits.length === 3) {
+        const sig = Number(digits.slice(0, 2));
+        const mult = Number(digits.slice(2, 3));
+        pf = sig * Math.pow(10, mult);
+      } else {
+        pf = Number(digits);
+      }
+      if (Number.isNaN(pf)) { capResult.hidden = true; return; }
+      const tolCode = capTol.value || inlineTol;
+      const tol = tolCode && CAP_TOL_LABELS[tolCode] ? CAP_TOL_LABELS[tolCode] : null;
+      capResult.hidden = false;
+      capResultValue.textContent = formatPf(pf);
+      capResultSub.textContent = `${pf.toLocaleString()} pF${tol ? ' · ' + tol + ' tolerance' : ''}${digits.length === 3 ? ' · EIA 3-digit code' : ' · direct pF value'}`;
+    }
+    capCode.addEventListener('input', computeCap);
+    capTol.addEventListener('change', computeCap);
+
+    // --- Wavelength & frequency ---
+    const wlFreq = document.getElementById('wl-freq') as HTMLInputElement;
+    const wlMeters = document.getElementById('wl-meters') as HTMLInputElement;
+    const wlResult = document.getElementById('wl-result')!;
+    const wlResultValue = document.getElementById('wl-result-value')!;
+    const wlResultSub = document.getElementById('wl-result-sub')!;
+    const SPEED_OF_LIGHT_MHZ_M = 299.792458; // c, in MHz·m
+
+    function updateWlResult(freqMhz: number, meters: number) {
+      wlResult.hidden = false;
+      wlResultValue.textContent = `${meters.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')} m`;
+      wlResultSub.textContent = `${(meters * 3.28084).toFixed(2)} ft · ${freqMhz.toFixed(4)} MHz`;
+    }
+    function computeWlFromFreq() {
+      const f = Number(wlFreq.value);
+      if (!wlFreq.value || Number.isNaN(f) || f <= 0) { wlResult.hidden = true; return; }
+      const meters = SPEED_OF_LIGHT_MHZ_M / f;
+      wlMeters.value = meters.toFixed(4);
+      updateWlResult(f, meters);
+    }
+    function computeWlFromMeters() {
+      const m = Number(wlMeters.value);
+      if (!wlMeters.value || Number.isNaN(m) || m <= 0) { wlResult.hidden = true; return; }
+      const f = SPEED_OF_LIGHT_MHZ_M / m;
+      wlFreq.value = f.toFixed(4);
+      updateWlResult(f, m);
+    }
+    wlFreq.addEventListener('input', computeWlFromFreq);
+    wlMeters.addEventListener('input', computeWlFromMeters);
+
+    // --- Club Log OQRS check ---
+    type OqrsMatch = { call: string; qsoCount: number; lastWorked: string; confirmed: boolean };
+    let oqrsStatusFilter: 'all' | 'confirmed' | 'pending' = 'all';
+
+    function applyOqrsFilters() {
+      const q = (document.getElementById('oqrs-search') as HTMLInputElement).value.trim().toLowerCase();
+      document.querySelectorAll<HTMLElement>('#oqrs-list .entity-row').forEach((row) => {
+        const searchOk = !q || row.dataset.label!.includes(q);
+        const confirmed = row.dataset.confirmed === 'true';
+        const statusOk = oqrsStatusFilter === 'all' || (oqrsStatusFilter === 'confirmed' ? confirmed : !confirmed);
+        row.style.display = searchOk && statusOk ? '' : 'none';
+      });
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('.status-filter .status-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        btn.parentElement!.querySelectorAll('.status-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        oqrsStatusFilter = btn.dataset.status as typeof oqrsStatusFilter;
+        applyOqrsFilters();
+      });
+    });
+
+    fetch('/api/qsos/oqrs-matches')
+      .then((r) => r.json())
+      .then((data: { syncedAt: string | null; matches: OqrsMatch[] }) => {
+        const list = document.getElementById('oqrs-list')!;
+        list.innerHTML = '';
+        for (const m of data.matches) {
+          const row = document.createElement('div');
+          row.className = 'entity-row';
+          row.dataset.label = m.call.toLowerCase();
+          row.dataset.confirmed = String(m.confirmed);
+          row.innerHTML = `
+            <span><a href="https://clublog.org/logsearch/${encodeURIComponent(m.call)}" target="_blank" rel="noopener">${m.call}</a><span style="color:var(--muted);"> &middot; ${m.qsoCount} QSO${m.qsoCount === 1 ? '' : 's'} &middot; last ${formatDate(m.lastWorked)}</span></span>
+            <span class="badge ${m.confirmed ? 'confirmed' : 'worked'}">${m.confirmed ? 'LoTW' : 'Not confirmed'}</span>
+          `;
+          list.appendChild(row);
+        }
+        const syncedEl = document.getElementById('oqrs-synced')!;
+        syncedEl.textContent = data.syncedAt
+          ? `${data.matches.length} matches · Club Log list last synced ${formatDate(data.syncedAt.slice(0, 10).replaceAll('-', ''))}`
+          : 'Club Log list not synced yet.';
+      })
+      .catch(() => {
+        document.getElementById('oqrs-synced')!.textContent = 'Could not load Club Log data.';
+      });
+
+    document.getElementById('oqrs-search')!.addEventListener('input', applyOqrsFilters);
+
+    // --- Have I worked this call ---
+    type Qso = { call: string; qsoDate: string; band: string | null; mode: string | null; gridsquare: string | null; country: string | null; lotwQslRcvd: string | null };
+
+    function formatDate(d: string) {
+      if (d.length !== 8) return d;
+      return `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
+    }
+
+    const callSearch = document.getElementById('call-search') as HTMLInputElement;
+    const callStatus = document.getElementById('call-status')!;
+    const callResults = document.getElementById('call-results')!;
+    let searchTimer: ReturnType<typeof setTimeout>;
+
+    callSearch.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      const call = callSearch.value.trim();
+      callResults.innerHTML = '';
+      if (!call) { callStatus.textContent = ''; return; }
+      callStatus.textContent = 'Searching…';
+      searchTimer = setTimeout(async () => {
+        const res = await fetch(`/api/qsos/lookup?call=${encodeURIComponent(call)}`);
+        const qsos: Qso[] = await res.json();
+        if (!qsos.length) {
+          callStatus.textContent = `No contacts with "${call}" in the log.`;
+          callResults.innerHTML = `<a class="btn secondary" style="margin-top:0.5rem;display:inline-flex;" href="https://www.qrz.com/db/${encodeURIComponent(call)}" target="_blank" rel="noopener">Look up ${call} on QRZ.com ↗</a>`;
+          return;
+        }
+        callStatus.textContent = `${qsos.length} contact${qsos.length === 1 ? '' : 's'} found:`;
+        for (const q of qsos) {
+          const row = document.createElement('div');
+          row.className = 'lookup-result';
+          row.innerHTML = `
+            <span><strong>${q.call}</strong> &middot; ${formatDate(q.qsoDate)} &middot; ${q.band ?? '—'} &middot; ${q.mode ?? '—'} ${q.lotwQslRcvd === 'Y' ? '✅' : ''}</span>
+            <a class="btn secondary" href="https://www.qrz.com/db/${encodeURIComponent(q.call)}" target="_blank" rel="noopener">QRZ ↗</a>
+          `;
+          callResults.appendChild(row);
+        }
+      }, 300);
+    });
+
+    // --- Export Log (admin-gated) ---
+    const EXPORT_TOKEN_KEY = 'n1ah_admin_token';
+    const exportLogin = document.getElementById('export-login')!;
+    const exportButtons = document.getElementById('export-buttons')!;
+    const exportLoginStatus = document.getElementById('export-login-status')!;
+    const exportStatus = document.getElementById('export-status')!;
+
+    function showExportButtons() {
+      exportLogin.setAttribute('hidden', '');
+      exportButtons.removeAttribute('hidden');
+    }
+
+    if (sessionStorage.getItem(EXPORT_TOKEN_KEY)) showExportButtons();
+
+    document.getElementById('export-login-form')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = (document.getElementById('export-password') as HTMLInputElement).value;
+      exportLoginStatus.textContent = 'Checking…';
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        const { token } = await res.json();
+        sessionStorage.setItem(EXPORT_TOKEN_KEY, token);
+        exportLoginStatus.textContent = '';
+        showExportButtons();
+      } else {
+        exportLoginStatus.textContent = 'Wrong password.';
+      }
+    });
+
+    async function downloadExport(url: string, filename: string) {
+      exportStatus.textContent = 'Preparing download…';
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${sessionStorage.getItem(EXPORT_TOKEN_KEY)}` } });
+      if (res.status === 401) {
+        sessionStorage.removeItem(EXPORT_TOKEN_KEY);
+        exportButtons.setAttribute('hidden', '');
+        exportLogin.removeAttribute('hidden');
+        exportLoginStatus.textContent = 'Session expired, please log in again.';
+        exportStatus.textContent = '';
+        return;
+      }
+      if (!res.ok) {
+        exportStatus.textContent = 'Export failed.';
+        return;
+      }
+      const blob = await res.blob();
+      await downloadOrShareBlob(blob, filename);
+      exportStatus.textContent = '';
+    }
+
+    document.getElementById('export-adi-btn')!.addEventListener('click', () => downloadExport('/api/qsos/export.adi', 'n1ah-qsos.adi'));
+    document.getElementById('export-csv-btn')!.addEventListener('click', () => downloadExport('/api/qsos/export.csv', 'n1ah-qsos.csv'));
+
+    // --- Reset buttons — wired last so every calculator above has already set
+    // its own initial defaults (e.g. dbm-z's "50", the resistor card's
+    // Brown/Black/Red/Gold), which this captures and restores on click rather
+    // than assuming everything resets to blank/first-option. ---
+    document.querySelectorAll<HTMLButtonElement>('.tool-reset-btn').forEach((button) => {
+      const card = button.closest('.tool-card')!;
+      const inputDefaults = new Map<HTMLInputElement, string>();
+      card.querySelectorAll<HTMLInputElement>('input[type="text"]').forEach((input) => inputDefaults.set(input, input.value));
+      const selectDefaults = new Map<HTMLSelectElement, string>();
+      card.querySelectorAll<HTMLSelectElement>('select').forEach((select) => selectDefaults.set(select, select.value));
+
+      button.addEventListener('click', () => {
+        inputDefaults.forEach((value, input) => { input.value = value; });
+        selectDefaults.forEach((value, select) => {
+          select.value = value;
+          select.dispatchEvent(new Event('change'));
+        });
+        card.querySelectorAll('.tool-result').forEach((el) => el.setAttribute('hidden', ''));
+      });
+    });
+
+    document.getElementById('call-reset-btn')!.addEventListener('click', () => {
+      callStatus.textContent = '';
+      callResults.innerHTML = '';
+    });
+
+    document.getElementById('grid-reset-btn')!.addEventListener('click', () => {
+      geoStatus.textContent = '';
+    });
+
+    document.getElementById('oqrs-reset-btn')!.addEventListener('click', () => {
+      oqrsStatusFilter = 'all';
+      document.querySelectorAll('.status-filter .status-btn').forEach((b) => b.classList.remove('active'));
+      document.querySelector('.status-filter .status-btn[data-status="all"]')?.classList.add('active');
+      applyOqrsFilters();
+    });
+  </script>
+</Base>
