@@ -3,6 +3,7 @@ import SwiftData
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
     @Environment(ThemeManager.self) private var themeManager
 
     @State private var profile: UserProfile?
@@ -16,6 +17,9 @@ struct SettingsView: View {
     @State private var qrzPassword = ""
     @State private var accentColor = "blue"
     @State private var colorSchemeName = "system"
+    @State private var saveMessage: String?
+    @State private var testingQRZ = false
+    @State private var qrzTestResult: String?
 
     private let colors = ["red", "orange", "yellow", "green", "mint", "teal", "cyan", "blue", "indigo", "purple", "pink"]
     private let schemes = ["system", "light", "dark"]
@@ -34,9 +38,29 @@ struct SettingsView: View {
                 }
 
                 Section("Integrations") {
-                    SecureField("QRZ Logbook API Key", text: $qrzApiKey)
+                    SecureField("QRZ Logbook API Key", text: $qrzApiKey, prompt: Text("6456-85A5-D502-3DEE"))
                     Text("Used to sync your QRZ Logbook ADIF. Get it from QRZ.com → Logbook → Settings.")
                         .font(.caption).foregroundStyle(.secondary)
+
+                    Button {
+                        Task { await testQRZKey() }
+                    } label: {
+                        HStack {
+                            Text("Test QRZ Key")
+                            Spacer()
+                            if testingQRZ {
+                                ProgressView()
+                            }
+                        }
+                    }
+                    .disabled(qrzApiKey.isEmpty || testingQRZ)
+
+                    if let result = qrzTestResult {
+                        Text(result)
+                            .font(.caption)
+                            .foregroundStyle(result.hasPrefix("OK") ? .green : .red)
+                    }
+
                     TextField("QRZ Username (callsign lookup)", text: $qrzUsername)
                         .autocapitalization(.none)
                         .autocorrectionDisabled()
@@ -59,12 +83,27 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Button("Save") { save() }
-                        .frame(maxWidth: .infinity)
+                    Button("Save") {
+                        save()
+                    }
+                    .frame(maxWidth: .infinity)
                 }
             }
             .navigationTitle("Settings")
             .onAppear { load() }
+            .overlay {
+                if let message = saveMessage {
+                    VStack {
+                        Spacer()
+                        Text(message)
+                            .font(.subheadline)
+                            .padding()
+                            .background(.regularMaterial)
+                            .cornerRadius(12)
+                            .padding(.bottom, 32)
+                    }
+                }
+            }
         }
     }
 
@@ -84,7 +123,11 @@ struct SettingsView: View {
     }
 
     private func save() {
-        guard let p = profile else { return }
+        guard let p = profile else {
+            saveMessage = "Error: profile not loaded"
+            clearMessageAfterDelay()
+            return
+        }
         p.callsign = callsign.uppercased()
         p.operatorName = operatorName
         p.gridSquare = gridSquare.uppercased()
@@ -94,14 +137,40 @@ struct SettingsView: View {
         p.qrzUsername = qrzUsername
         p.qrzPassword = qrzPassword
         p.accentColorName = accentColor
-        try? context.save()
 
-        themeManager.setAccent(accentColor)
-        themeManager.setScheme(colorSchemeName)
+        do {
+            try context.save()
+            themeManager.setAccent(accentColor)
+            themeManager.setScheme(colorSchemeName)
+            saveMessage = "Saved"
+        } catch {
+            saveMessage = "Save failed: \(error.localizedDescription)"
+        }
+        clearMessageAfterDelay()
+    }
+
+    private func clearMessageAfterDelay() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            saveMessage = nil
+        }
+    }
+
+    private func testQRZKey() async {
+        testingQRZ = true
+        qrzTestResult = nil
+        defer { testingQRZ = false }
+        do {
+            let adif = try await QRZLogbookService.fetchADIF(apiKey: qrzApiKey)
+            let count = ADIFParser.parse(content: adif).count
+            qrzTestResult = "OK: key valid, \(count) QSOs available"
+        } catch {
+            qrzTestResult = "Failed: \(error.localizedDescription)"
+        }
     }
 }
 
 #Preview {
     SettingsView()
+        .environment(ThemeManager())
         .modelContainer(for: [UserProfile.self], inMemory: true)
 }
