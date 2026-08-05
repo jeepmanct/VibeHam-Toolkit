@@ -11,6 +11,7 @@ struct LogView: View {
     @State private var importResult: String?
     @State private var showingShareSheet = false
     @State private var shareItems: [Any] = []
+    @State private var qrzSyncInProgress = false
 
     enum FilterMode: String, CaseIterable {
         case all = "All"
@@ -92,6 +93,10 @@ struct LogView: View {
                     EditButton()
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button { syncQRZ() } label: {
+                        Label("QRZ", systemImage: "arrow.triangle.2.circlepath")
+                    }
+                    .disabled(qrzSyncInProgress)
                     Button { exportLog() } label: {
                         Label("Export", systemImage: "square.and.arrow.up")
                     }
@@ -122,6 +127,38 @@ struct LogView: View {
         try? adif.write(to: url, atomically: true, encoding: .utf8)
         shareItems = [url]
         showingShareSheet = true
+    }
+
+    private func syncQRZ() {
+        let profile = UserProfile.fetchOrCreate(in: context)
+        guard !profile.qrzApiKey.isEmpty else {
+            importResult = "Add your QRZ Logbook API key in Settings first."
+            return
+        }
+        qrzSyncInProgress = true
+        Task {
+            do {
+                let adif = try await QRZLogbookService.fetchADIF(apiKey: profile.qrzApiKey)
+                let parsed = ADIFParser.parse(content: adif)
+                var inserted = 0
+                var skipped = 0
+                let existing = (try? context.fetch(FetchDescriptor<QSO>())) ?? []
+                for qso in parsed {
+                    let isDuplicate = existing.contains { $0.call == qso.call && $0.qsoDate == qso.qsoDate }
+                    if !isDuplicate {
+                        context.insert(qso)
+                        inserted += 1
+                    } else {
+                        skipped += 1
+                    }
+                }
+                try context.save()
+                importResult = "QRZ sync: imported \(inserted) QSOs, skipped \(skipped) duplicates."
+            } catch {
+                importResult = "QRZ sync failed: \(error.localizedDescription)"
+            }
+            qrzSyncInProgress = false
+        }
     }
 
     private func handleImport(_ result: Result<[URL], any Error>) {

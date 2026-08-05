@@ -10,6 +10,8 @@ final class UserProfile {
     var latitude: Double
     var longitude: Double
     var qrzApiKey: String
+    var qrzUsername: String
+    var qrzPassword: String
     var useDarkMode: Bool
     var accentColorName: String
 
@@ -20,6 +22,8 @@ final class UserProfile {
         latitude: Double = 0,
         longitude: Double = 0,
         qrzApiKey: String = "",
+        qrzUsername: String = "",
+        qrzPassword: String = "",
         useDarkMode: Bool = false,
         accentColorName: String = "blue"
     ) {
@@ -29,6 +33,8 @@ final class UserProfile {
         self.latitude = latitude
         self.longitude = longitude
         self.qrzApiKey = qrzApiKey
+        self.qrzUsername = qrzUsername
+        self.qrzPassword = qrzPassword
         self.useDarkMode = useDarkMode
         self.accentColorName = accentColorName
     }

@@ -18,6 +18,7 @@
 		5EA975E13BD2268F10672CCF /* ADIFParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */; };
 		5F5DC8C9CF0D58600B174A63 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62586E58C8D05692F8D4D56 /* MapView.swift */; };
 		6372048B0D587292F2862D94 /* AwardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEBA87D7931EE69648F018 /* AwardsView.swift */; };
+		657366F82565818E1DA6AFED /* QRZLogbookService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B94E41AA342C36484914814 /* QRZLogbookService.swift */; };
 		67AEFC9DF604E093F7A84B75 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F0496B31EF9EBCDDD1F4EF /* ContentView.swift */; };
 		6E4C17C6BB12E89E23BB1511 /* GridUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB88FA573ED85901D3B56B4 /* GridUtility.swift */; };
 		73C32A6414D671CA459EC7B7 /* QSOEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5670FA9077787776CA35A5CD /* QSOEditorView.swift */; };
@@ -45,6 +46,7 @@
 		7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADIFParser.swift; sourceTree = "<group>"; };
 		8E6011E88EBC8D587D782D10 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		91276EB88C46DF24E7CEFCC8 /* SatelliteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatelliteService.swift; sourceTree = "<group>"; };
+		9B94E41AA342C36484914814 /* QRZLogbookService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRZLogbookService.swift; sourceTree = "<group>"; };
 		A62586E58C8D05692F8D4D56 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		A63261E4886AE5FEEACF3182 /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		A674DF5DDF045874BEEC6578 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */,
 				A62586E58C8D05692F8D4D56 /* MapView.swift */,
 				4E21AD33E4DF6C5DA400ED22 /* Models.swift */,
+				9B94E41AA342C36484914814 /* QRZLogbookService.swift */,
 				18D3C560A1E759681F4F6F4C /* QRZLookupView.swift */,
 				CD6C1BC422F160CBE29053FD /* QRZService.swift */,
 				5670FA9077787776CA35A5CD /* QSOEditorView.swift */,
@@ -178,6 +181,7 @@
 				A751E364F6060D24456C84C3 /* LogView.swift in Sources */,
 				5F5DC8C9CF0D58600B174A63 /* MapView.swift in Sources */,
 				76D97954A2D14BE0C7733C85 /* Models.swift in Sources */,
+				657366F82565818E1DA6AFED /* QRZLogbookService.swift in Sources */,
 				3F386349C63EE5CEBB643984 /* QRZLookupView.swift in Sources */,
 				7F11D009CD6EA090E3A5B3B2 /* QRZService.swift in Sources */,
 				73C32A6414D671CA459EC7B7 /* QSOEditorView.swift in Sources */,

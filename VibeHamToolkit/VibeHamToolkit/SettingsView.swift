@@ -12,6 +12,8 @@ struct SettingsView: View {
     @State private var latitude = ""
     @State private var longitude = ""
     @State private var qrzApiKey = ""
+    @State private var qrzUsername = ""
+    @State private var qrzPassword = ""
     @State private var accentColor = "blue"
     @State private var colorSchemeName = "system"
 
@@ -32,8 +34,14 @@ struct SettingsView: View {
                 }
 
                 Section("Integrations") {
-                    SecureField("QRZ.com API Key", text: $qrzApiKey)
-                    Text("Optional. Stored only on this device.")
+                    SecureField("QRZ Logbook API Key", text: $qrzApiKey)
+                    Text("Used to sync your QRZ Logbook ADIF. Get it from QRZ.com → Logbook → Settings.")
+                        .font(.caption).foregroundStyle(.secondary)
+                    TextField("QRZ Username (callsign lookup)", text: $qrzUsername)
+                        .autocapitalization(.none)
+                        .autocorrectionDisabled()
+                    SecureField("QRZ Password (callsign lookup)", text: $qrzPassword)
+                    Text("QRZ callsign lookup requires an active QRZ XML Data subscription.")
                         .font(.caption).foregroundStyle(.secondary)
                 }
 
@@ -69,6 +77,8 @@ struct SettingsView: View {
         latitude = p.latitude == 0 ? "" : String(p.latitude)
         longitude = p.longitude == 0 ? "" : String(p.longitude)
         qrzApiKey = p.qrzApiKey
+        qrzUsername = p.qrzUsername
+        qrzPassword = p.qrzPassword
         accentColor = themeManager.accentColorName
         colorSchemeName = themeManager.colorSchemeName
     }
@@ -81,6 +91,8 @@ struct SettingsView: View {
         p.latitude = Double(latitude) ?? 0
         p.longitude = Double(longitude) ?? 0
         p.qrzApiKey = qrzApiKey
+        p.qrzUsername = qrzUsername
+        p.qrzPassword = qrzPassword
         p.accentColorName = accentColor
         try? context.save()
 

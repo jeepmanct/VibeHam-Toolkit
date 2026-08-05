@@ -25,10 +25,10 @@ All personally identifying information from the reference implementation was rem
 | **Stats** | Totals, LoTW confirmations, DXCC entities, US states, band/mode/year breakdowns |
 | **Awards** | Progress toward DXCC Challenge, Worked All States, POTA Hunter, IOTA, CQ Zones |
 | **Map** | Plot QSOs by grid square on MapKit |
-| **Tools** | QRZ.com callsign lookup, Maidenhead grid-square decoder, distance/bearing calculator |
+| **Tools** | QRZ.com callsign lookup (uses QRZ username/password), Maidenhead grid-square decoder, distance/bearing calculator |
 | **Space** | Live solar flux, A/K index, sunspot number from NOAA/SILSO |
 | **Sats** | Amateur satellite list, frequency/mode info, CelesTrak TLE fetch, approximate pass predictions |
-| **Settings** | Callsign, grid, location, QRZ API key, accent color, dark/light/system theme |
+| **Settings** | Callsign, name, grid, location, **QRZ Logbook API key**, **QRZ username/password** for callsign lookup, accent color, dark/light/system theme |
 
 ## Project layout
 

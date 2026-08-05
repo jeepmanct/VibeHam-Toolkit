@@ -27,16 +27,32 @@ struct QRZInfo {
 
 actor QRZService {
     static let shared = QRZService()
+    private var sessionKey: String?
 
-    func lookup(callsign: String, apiKey: String) async throws -> QRZInfo {
-        let encoded = callsign.addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? callsign
-        let url = URL(string: "https://xmldata.qrz.com/xml/current/?s=\(apiKey);callsign=\(encoded)")!
+    func lookup(callsign: String, username: String, password: String) async throws -> QRZInfo {
+        let key = try await ensureSessionKey(username: username, password: password)
+        let encodedCall = callsign.addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? callsign
+        let url = URL(string: "https://xmldata.qrz.com/xml/current/?s=\(key);callsign=\(encodedCall)")!
         let (data, _) = try await URLSession.shared.data(from: url)
         let parser = QRZXMLParser(data: data)
         guard let info = parser.parse() else {
             throw URLError(.cannotParseResponse)
         }
         return info
+    }
+
+    private func ensureSessionKey(username: String, password: String) async throws -> String {
+        if let key = sessionKey, !key.isEmpty { return key }
+        let encodedUser = username.addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? username
+        let encodedPass = password.addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? password
+        let url = URL(string: "https://xmldata.qrz.com/xml/current/?username=\(encodedUser)&password=\(encodedPass)&agent=vibeham1.0")!
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let parser = QRZXMLParser(data: data)
+        guard let key = parser.parseKey(), !key.isEmpty else {
+            throw NSError(domain: "QRZ", code: 1, userInfo: [NSLocalizedDescriptionKey: parser.errorMessage ?? "Could not log in to QRZ"])
+        }
+        sessionKey = key
+        return key
     }
 }
 
@@ -54,7 +70,7 @@ private final class QRZXMLParser: NSObject, XMLParserDelegate {
     private var currentText = ""
     private var info: [String: String] = [:]
     private var sessionKey: String?
-    private var errorMessage: String?
+    private(set) var errorMessage: String?
 
     init(data: Data) {
         parser = XMLParser(data: data)
@@ -64,7 +80,7 @@ private final class QRZXMLParser: NSObject, XMLParserDelegate {
 
     func parse() -> QRZInfo? {
         parser.parse()
-        if let error = errorMessage { print("QRZ error: \(error)"); return nil }
+        if let error = errorMessage { return nil }
         guard !info.isEmpty else { return nil }
         return QRZInfo(
             call: info["call"] ?? "",
@@ -90,6 +106,11 @@ private final class QRZXMLParser: NSObject, XMLParserDelegate {
             classCode: info["class"] ?? "",
             codes: info["codes"] ?? ""
         )
+    }
+
+    func parseKey() -> String? {
+        parser.parse()
+        return sessionKey
     }
 
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String] = [:]) {
