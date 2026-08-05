@@ -16,20 +16,27 @@ All personally identifying information from the reference implementation was rem
 - Password/QRZ-key setup scripts removed
 - No log data, ADIF files, or photos are committed
 
-## Features (v1)
+## Features
 
-- **Local QSO Log** — import ADIF (`.adi`) files from LoTW or other logbooks; stored in SwiftData
-- **Stats** — totals, LoTW confirmations, DXCC entity count, band/mode/year breakdowns
-- **Map** — plot QSOs by grid square on a MapKit map
-- **Tools** — Maidenhead grid-square decoder, distance/bearing calculator
-- **Space Weather** — live solar flux, A/K index, and sunspot number from NOAA/SILSO
-- **Settings** — configure your callsign, grid, location, QRZ API key, accent color, and dark/light/system theme
+| Tab | Feature |
+|-----|---------|
+| **Log** | Import ADIF `.adi` files, searchable list, POTA/SOTA filter, swipe-to-delete, export full log |
+| **Detail** | Tap any QSO to add a photo, POTA reference, or SOTA reference |
+| **Stats** | Totals, LoTW confirmations, DXCC entities, US states, band/mode/year breakdowns |
+| **Awards** | Progress toward DXCC Challenge, Worked All States, POTA Hunter, IOTA, CQ Zones |
+| **Map** | Plot QSOs by grid square on MapKit |
+| **Tools** | QRZ.com callsign lookup, Maidenhead grid-square decoder, distance/bearing calculator |
+| **Space** | Live solar flux, A/K index, sunspot number from NOAA/SILSO |
+| **Sats** | Amateur satellite list, frequency/mode info, CelesTrak TLE fetch, approximate pass predictions |
+| **Settings** | Callsign, grid, location, QRZ API key, accent color, dark/light/system theme |
 
 ## Project layout
 
 - `VibeHamToolkit/` — iOS app source and Xcode project
   - `VibeHamToolkit/Models.swift` — SwiftData models
-  - `VibeHamToolkit/ADIFParser.swift` — ADIF file parser
+  - `VibeHamToolkit/ADIFParser.swift` / `ADIFExporter.swift` — ADIF import/export
+  - `VibeHamToolkit/QRZService.swift` — QRZ.com XML lookup
+  - `VibeHamToolkit/SatelliteService.swift` — TLE fetch + simplified pass predictor
   - `VibeHamToolkit/*View.swift` — SwiftUI views
   - `project.yml` — xcodegen project spec
 - `reference/` — scrubbed copy of the original web/API codebase for reference only
@@ -47,10 +54,17 @@ xcodebuild -project VibeHamToolkit.xcodeproj \
 
 To run on a physical iPhone, open `VibeHamToolkit.xcodeproj` in Xcode, set your team/signing, and build to device.
 
-## Roadmap
+### Sample ADIF for testing
 
-- QRZ.com callsign lookup (uses the API key in Settings)
-- Satellite pass predictions with fetched TLEs
-- Photo log entries
-- Awards progress (DXCC, WAS, POTA)
-- Export ADIF
+A sample ADIF file is included in this repo at `sample-test.adi`. Use it to test the import flow:
+
+1. Open the app
+2. Go to the **Log** tab
+3. Tap the import (⬇️) button
+4. Select `sample-test.adi`
+
+## Notes
+
+- **QRZ lookup** requires a QRZ.com XML Logbook Data API key entered in **Settings**.
+- **Satellite pass predictions** use a simplified Keplerian propagator and are approximate; for exact tracking, an SGP4 implementation can be swapped in later.
+- All data lives in the app's SwiftData store on your device. No server, no Pi, no website required.

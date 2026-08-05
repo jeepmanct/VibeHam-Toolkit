@@ -8,44 +8,62 @@
 
 /* Begin PBXBuildFile section */
 		0CA38DC72281AE28470AA731 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4295D113C3A79D85E645DDC /* ThemeManager.swift */; };
+		0E4D796F0FD83E931C6747F7 /* SatelliteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11FE90D9F4A71ACDD8EB0EC2 /* SatelliteView.swift */; };
 		1E7B0C488200E26E99732551 /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD2DF3AD38847116AA49504 /* ConditionsView.swift */; };
 		2EAE1B662EB1215528AA31B2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE1AF3848BC9194524B8F8 /* SettingsView.swift */; };
 		3626FAD91BB226028ABD4CB4 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63261E4886AE5FEEACF3182 /* ToolsView.swift */; };
+		380C2CE2EEC4793DF005491D /* ADIFExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1047E5C4E3A03FDE3007D4D /* ADIFExporter.swift */; };
+		3F386349C63EE5CEBB643984 /* QRZLookupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D3C560A1E759681F4F6F4C /* QRZLookupView.swift */; };
 		4A2C03E683ACB02D8C8F2DD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB02EC8712F7003466E9DD71 /* Assets.xcassets */; };
 		5EA975E13BD2268F10672CCF /* ADIFParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */; };
 		5F5DC8C9CF0D58600B174A63 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62586E58C8D05692F8D4D56 /* MapView.swift */; };
+		6372048B0D587292F2862D94 /* AwardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEBA87D7931EE69648F018 /* AwardsView.swift */; };
 		67AEFC9DF604E093F7A84B75 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F0496B31EF9EBCDDD1F4EF /* ContentView.swift */; };
 		6E4C17C6BB12E89E23BB1511 /* GridUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB88FA573ED85901D3B56B4 /* GridUtility.swift */; };
+		73C32A6414D671CA459EC7B7 /* QSOEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5670FA9077787776CA35A5CD /* QSOEditorView.swift */; };
 		76D97954A2D14BE0C7733C85 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E21AD33E4DF6C5DA400ED22 /* Models.swift */; };
+		7F11D009CD6EA090E3A5B3B2 /* QRZService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C1BC422F160CBE29053FD /* QRZService.swift */; };
 		89E3563E2527E97A879C265B /* VibeHamToolkitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E710BD25EB4492741919223E /* VibeHamToolkitApp.swift */; };
+		8DE1BA74D693E7D6C44E76EB /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7C59023AAD777CB46E4B3A /* ShareSheet.swift */; };
+		922DB92867F9EB4591CA6F9B /* SatelliteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91276EB88C46DF24E7CEFCC8 /* SatelliteService.swift */; };
 		A751E364F6060D24456C84C3 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */; };
 		F89B4D6FFEA237506856FC2D /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6011E88EBC8D587D782D10 /* StatsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A7C59023AAD777CB46E4B3A /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+		11FE90D9F4A71ACDD8EB0EC2 /* SatelliteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatelliteView.swift; sourceTree = "<group>"; };
+		18D3C560A1E759681F4F6F4C /* QRZLookupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRZLookupView.swift; sourceTree = "<group>"; };
+		26DEBA87D7931EE69648F018 /* AwardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardsView.swift; sourceTree = "<group>"; };
 		3F879E60BF9FE815E3594C4A /* VibeHamToolkit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VibeHamToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43DE1AF3848BC9194524B8F8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4E21AD33E4DF6C5DA400ED22 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		52F0496B31EF9EBCDDD1F4EF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		5670FA9077787776CA35A5CD /* QSOEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QSOEditorView.swift; sourceTree = "<group>"; };
 		5CD2DF3AD38847116AA49504 /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
 		7EB88FA573ED85901D3B56B4 /* GridUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridUtility.swift; sourceTree = "<group>"; };
 		7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADIFParser.swift; sourceTree = "<group>"; };
 		8E6011E88EBC8D587D782D10 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		91276EB88C46DF24E7CEFCC8 /* SatelliteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatelliteService.swift; sourceTree = "<group>"; };
 		A62586E58C8D05692F8D4D56 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		A63261E4886AE5FEEACF3182 /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		A674DF5DDF045874BEEC6578 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		CB02EC8712F7003466E9DD71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CD6C1BC422F160CBE29053FD /* QRZService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRZService.swift; sourceTree = "<group>"; };
 		E4295D113C3A79D85E645DDC /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		E710BD25EB4492741919223E /* VibeHamToolkitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibeHamToolkitApp.swift; sourceTree = "<group>"; };
+		F1047E5C4E3A03FDE3007D4D /* ADIFExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADIFExporter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		268435AA237DCC372826B2F7 /* VibeHamToolkit */ = {
 			isa = PBXGroup;
 			children = (
+				F1047E5C4E3A03FDE3007D4D /* ADIFExporter.swift */,
 				7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */,
 				CB02EC8712F7003466E9DD71 /* Assets.xcassets */,
+				26DEBA87D7931EE69648F018 /* AwardsView.swift */,
 				5CD2DF3AD38847116AA49504 /* ConditionsView.swift */,
 				52F0496B31EF9EBCDDD1F4EF /* ContentView.swift */,
 				7EB88FA573ED85901D3B56B4 /* GridUtility.swift */,
@@ -53,7 +71,13 @@
 				AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */,
 				A62586E58C8D05692F8D4D56 /* MapView.swift */,
 				4E21AD33E4DF6C5DA400ED22 /* Models.swift */,
+				18D3C560A1E759681F4F6F4C /* QRZLookupView.swift */,
+				CD6C1BC422F160CBE29053FD /* QRZService.swift */,
+				5670FA9077787776CA35A5CD /* QSOEditorView.swift */,
+				91276EB88C46DF24E7CEFCC8 /* SatelliteService.swift */,
+				11FE90D9F4A71ACDD8EB0EC2 /* SatelliteView.swift */,
 				43DE1AF3848BC9194524B8F8 /* SettingsView.swift */,
+				0A7C59023AAD777CB46E4B3A /* ShareSheet.swift */,
 				8E6011E88EBC8D587D782D10 /* StatsView.swift */,
 				E4295D113C3A79D85E645DDC /* ThemeManager.swift */,
 				A63261E4886AE5FEEACF3182 /* ToolsView.swift */,
@@ -145,14 +169,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				380C2CE2EEC4793DF005491D /* ADIFExporter.swift in Sources */,
 				5EA975E13BD2268F10672CCF /* ADIFParser.swift in Sources */,
+				6372048B0D587292F2862D94 /* AwardsView.swift in Sources */,
 				1E7B0C488200E26E99732551 /* ConditionsView.swift in Sources */,
 				67AEFC9DF604E093F7A84B75 /* ContentView.swift in Sources */,
 				6E4C17C6BB12E89E23BB1511 /* GridUtility.swift in Sources */,
 				A751E364F6060D24456C84C3 /* LogView.swift in Sources */,
 				5F5DC8C9CF0D58600B174A63 /* MapView.swift in Sources */,
 				76D97954A2D14BE0C7733C85 /* Models.swift in Sources */,
+				3F386349C63EE5CEBB643984 /* QRZLookupView.swift in Sources */,
+				7F11D009CD6EA090E3A5B3B2 /* QRZService.swift in Sources */,
+				73C32A6414D671CA459EC7B7 /* QSOEditorView.swift in Sources */,
+				922DB92867F9EB4591CA6F9B /* SatelliteService.swift in Sources */,
+				0E4D796F0FD83E931C6747F7 /* SatelliteView.swift in Sources */,
 				2EAE1B662EB1215528AA31B2 /* SettingsView.swift in Sources */,
+				8DE1BA74D693E7D6C44E76EB /* ShareSheet.swift in Sources */,
 				F89B4D6FFEA237506856FC2D /* StatsView.swift in Sources */,
 				0CA38DC72281AE28470AA731 /* ThemeManager.swift in Sources */,
 				3626FAD91BB226028ABD4CB4 /* ToolsView.swift in Sources */,

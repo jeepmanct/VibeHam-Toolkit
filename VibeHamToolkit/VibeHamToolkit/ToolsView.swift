@@ -15,6 +15,12 @@ struct ToolsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section("Callsign Lookup") {
+                    NavigationLink("QRZ.com Lookup") {
+                        QRZLookupView()
+                    }
+                }
+
                 Section("Grid Square") {
                     TextField("Enter grid (e.g. FN31pr)", text: $gridInput)
                         .autocapitalization(.allCharacters)

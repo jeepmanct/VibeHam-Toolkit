@@ -61,7 +61,9 @@ struct ADIFParser {
                 continent: fields["CONT"],
                 lotwQslRcvd: fields["LOTW_QSL_RCVD"],
                 lotwQslRcvdDate: fields["LOTW_QSL_RCVD_DATE"],
-                rawAdif: chunk
+                rawAdif: chunk,
+                potaRef: fields["POTA_REF"],
+                sotaRef: fields["SOTA_REF"]
             ))
         }
 

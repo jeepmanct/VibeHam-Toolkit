@@ -67,6 +67,9 @@ final class QSO {
     var lotwQslRcvdDate: String?
     var rawAdif: String?
     var importedAt: Date
+    var imageData: Data?
+    var potaRef: String?
+    var sotaRef: String?
 
     init(
         id: UUID = UUID(),
@@ -87,7 +90,10 @@ final class QSO {
         continent: String? = nil,
         lotwQslRcvd: String? = nil,
         lotwQslRcvdDate: String? = nil,
-        rawAdif: String? = nil
+        rawAdif: String? = nil,
+        imageData: Data? = nil,
+        potaRef: String? = nil,
+        sotaRef: String? = nil
     ) {
         self.id = id
         self.call = call
@@ -109,6 +115,9 @@ final class QSO {
         self.lotwQslRcvdDate = lotwQslRcvdDate
         self.rawAdif = rawAdif
         self.importedAt = Date()
+        self.imageData = imageData
+        self.potaRef = potaRef
+        self.sotaRef = sotaRef
     }
 
     var date: Date? {

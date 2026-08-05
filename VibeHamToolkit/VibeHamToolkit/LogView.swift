@@ -6,52 +6,96 @@ struct LogView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor<QSO>(\.qsoDate, order: .reverse)]) private var qsos: [QSO]
     @State private var searchText = ""
+    @State private var filter: FilterMode = .all
     @State private var showingImporter = false
     @State private var importResult: String?
-    @State private var selectedQSO: QSO?
+    @State private var showingShareSheet = false
+    @State private var shareItems: [Any] = []
+
+    enum FilterMode: String, CaseIterable {
+        case all = "All"
+        case pota = "POTA"
+        case sota = "SOTA"
+    }
 
     private var filtered: [QSO] {
-        guard !searchText.isEmpty else { return qsos }
+        var result = qsos
+        switch filter {
+        case .pota:
+            result = result.filter { ($0.potaRef ?? "").isEmpty == false }
+        case .sota:
+            result = result.filter { ($0.sotaRef ?? "").isEmpty == false }
+        case .all:
+            break
+        }
+        guard !searchText.isEmpty else { return result }
         let lower = searchText.lowercased()
-        return qsos.filter {
+        return result.filter {
             $0.call.lowercased().contains(lower) ||
             ($0.country?.lowercased().contains(lower) ?? false) ||
             ($0.band?.lowercased().contains(lower) ?? false) ||
-            ($0.mode?.lowercased().contains(lower) ?? false)
+            ($0.mode?.lowercased().contains(lower) ?? false) ||
+            ($0.potaRef?.lowercased().contains(lower) ?? false) ||
+            ($0.sotaRef?.lowercased().contains(lower) ?? false)
         }
     }
 
     var body: some View {
         NavigationStack {
-            List(selection: $selectedQSO) {
-                ForEach(filtered) { qso in
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Text(qso.call).font(.headline)
-                            Spacer()
-                            Text(qso.qsoDate).font(.caption.monospaced())
-                                .foregroundStyle(.secondary)
+            List {
+                Section {
+                    Picker("Filter", selection: $filter) {
+                        ForEach(FilterMode.allCases, id: \.self) { mode in
+                            Text(mode.rawValue).tag(mode)
                         }
-                        HStack {
-                            Text([qso.band, qso.mode].compactMap { $0 }.joined(separator: " · "))
-                                .font(.subheadline)
-                            Spacer()
-                            Text(qso.country ?? "").font(.caption)
-                        }
-                        .foregroundStyle(.secondary)
                     }
-                    .tag(qso)
+                    .pickerStyle(.segmented)
+                }
+                .listRowBackground(Color.clear)
+
+                ForEach(filtered) { qso in
+                    NavigationLink(value: qso) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text(qso.call).font(.headline)
+                                Spacer()
+                                Text(qso.qsoDate).font(.caption.monospaced())
+                                    .foregroundStyle(.secondary)
+                            }
+                            HStack {
+                                Text([qso.band, qso.mode].compactMap { $0 }.joined(separator: " · "))
+                                    .font(.subheadline)
+                                Spacer()
+                                if let pota = qso.potaRef, !pota.isEmpty {
+                                    Text(pota).font(.caption).padding(.horizontal, 6).padding(.vertical, 2)
+                                        .background(Color.green.opacity(0.2)).cornerRadius(4)
+                                }
+                                if let sota = qso.sotaRef, !sota.isEmpty {
+                                    Text(sota).font(.caption).padding(.horizontal, 6).padding(.vertical, 2)
+                                        .background(Color.blue.opacity(0.2)).cornerRadius(4)
+                                }
+                            }
+                            .foregroundStyle(.secondary)
+                        }
+                    }
                 }
                 .onDelete(perform: deleteItems)
             }
             .listStyle(.plain)
             .navigationTitle("QSO Log")
+            .navigationDestination(for: QSO.self) { qso in
+                QSOEditorView(qso: qso)
+            }
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     EditButton()
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button { exportLog() } label: {
+                        Label("Export", systemImage: "square.and.arrow.up")
+                    }
+                    .disabled(qsos.isEmpty)
                     Button { showingImporter = true } label: {
                         Label("Import ADIF", systemImage: "square.and.arrow.down")
                     }
@@ -65,7 +109,19 @@ struct LogView: View {
             } message: {
                 Text(importResult ?? "")
             }
+            .sheet(isPresented: $showingShareSheet) {
+                ShareSheet(items: shareItems)
+            }
         }
+    }
+
+    private func exportLog() {
+        let profile = UserProfile.fetchOrCreate(in: context)
+        let adif = ADIFExporter.export(qsos: qsos, myGrid: profile.gridSquare)
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("VibeHam-Export.adi")
+        try? adif.write(to: url, atomically: true, encoding: .utf8)
+        shareItems = [url]
+        showingShareSheet = true
     }
 
     private func handleImport(_ result: Result<[URL], any Error>) {
