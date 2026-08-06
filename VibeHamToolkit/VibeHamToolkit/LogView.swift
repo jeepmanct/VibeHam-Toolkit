@@ -114,7 +114,29 @@ struct LogView: View {
                     }
                     .disabled(qrzSyncInProgress)
 
-                    Button { syncPOTA() } label: {
+                    Menu {
+                        if POTAAuthManager.shared.isAuthenticated {
+                            Button { syncPOTA(full: true) } label: {
+                                Label("Sync Full POTA Log", systemImage: "arrow.down.circle.fill")
+                            }
+                            .disabled(potaSyncInProgress)
+                            Button { syncPOTA(full: false) } label: {
+                                Label("Sync Recent POTA (Public)", systemImage: "arrow.down.circle")
+                            }
+                            .disabled(potaSyncInProgress)
+                            Button(role: .destructive) { signOutPOTA() } label: {
+                                Label("Disconnect POTA", systemImage: "xmark.circle")
+                            }
+                        } else {
+                            Button { signInPOTA() } label: {
+                                Label("Sign In to POTA", systemImage: "person.badge.key")
+                            }
+                            Button { syncPOTA(full: false) } label: {
+                                Label("Sync Recent POTA (Public)", systemImage: "arrow.down.circle")
+                            }
+                            .disabled(potaSyncInProgress)
+                        }
+                    } label: {
                         if potaSyncInProgress {
                             ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
@@ -193,7 +215,24 @@ struct LogView: View {
         }
     }
 
-    private func syncPOTA() {
+    private func signInPOTA() {
+        Task {
+            let result = await POTAAuthManager.shared.signIn()
+            switch result {
+            case .success:
+                importResult = "Signed in to POTA. Tap POTA -> Sync Full POTA Log to download your logbook."
+            case .failure(let error):
+                importResult = "POTA sign-in failed: \(error.localizedDescription)"
+            }
+        }
+    }
+
+    private func signOutPOTA() {
+        POTAAuthManager.shared.signOut()
+        importResult = "Disconnected POTA account."
+    }
+
+    private func syncPOTA(full: Bool) {
         let profile = UserProfile.fetchOrCreate(in: context)
         guard !profile.callsign.isEmpty else {
             importResult = "Set your callsign in Settings first so POTA knows whose log to fetch."
@@ -202,7 +241,12 @@ struct LogView: View {
         potaSyncInProgress = true
         Task {
             do {
-                let potaQSOs = try await POTAService.fetchRecentHunterQSOs(callsign: profile.callsign)
+                let potaQSOs: [POTAService.POTAQSO]
+                if full {
+                    potaQSOs = try await POTAService.fetchAllHunterQSOs()
+                } else {
+                    potaQSOs = try await POTAService.fetchRecentHunterQSOs(callsign: profile.callsign)
+                }
                 let existing = (try? context.fetch(FetchDescriptor<QSO>())) ?? []
                 var inserted = 0
                 var skipped = 0
@@ -219,7 +263,8 @@ struct LogView: View {
                 try context.save()
                 profile.lastPOTASync = Date()
                 try context.save()
-                importResult = "POTA sync: imported \(inserted) QSOs, skipped \(skipped) duplicates."
+                let label = full ? "full" : "recent"
+                importResult = "POTA sync (\(label)): imported \(inserted) QSOs, skipped \(skipped) duplicates."
             } catch {
                 importResult = "POTA sync failed: \(error.localizedDescription)"
             }
