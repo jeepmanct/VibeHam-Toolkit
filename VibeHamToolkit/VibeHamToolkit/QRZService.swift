@@ -80,7 +80,7 @@ private final class QRZXMLParser: NSObject, XMLParserDelegate {
 
     func parse() -> QRZInfo? {
         parser.parse()
-        if let error = errorMessage { return nil }
+        if errorMessage != nil { return nil }
         guard !info.isEmpty else { return nil }
         return QRZInfo(
             call: info["call"] ?? "",

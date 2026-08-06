@@ -84,13 +84,13 @@ struct AwardRow: View {
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
-                    if let target = target {
+                    if target != nil {
                         Text("\(Int(progress * 100))%")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
-                if let target = target {
+                if target != nil {
                     ProgressView(value: progress)
                         .tint(.green)
                 }

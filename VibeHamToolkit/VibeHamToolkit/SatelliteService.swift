@@ -42,8 +42,6 @@ actor SatelliteService {
     }
 
     func parseTLE(name: String, line1: String, line2: String) throws -> TLE {
-        let set1 = CharacterSet(charactersIn: line1)
-        let set2 = CharacterSet(charactersIn: line2)
         guard line1.hasPrefix("1 "), line2.hasPrefix("2 ") else { throw URLError(.cannotParseResponse) }
         let noradId = Int(line1[line1.index(line1.startIndex, offsetBy: 2)...line1.index(line1.startIndex, offsetBy: 6)].trimmingCharacters(in: .whitespaces)) ?? 0
 
@@ -90,7 +88,7 @@ actor SatelliteService {
             let pos = propagate(tle: tle, date: current)
             let elev = elevation(observerEcef: obs, satelliteEcef: pos)
             if elev > minElevation {
-                var passStart = current
+                let passStart = current
                 var peakElev = elev
                 var peakTime = current
                 while current < end {
@@ -111,7 +109,6 @@ actor SatelliteService {
     }
 
     private func propagate(tle: TLE, date: Date) -> SIMD3<Double> {
-        let dtDays = date.timeIntervalSince(tle.epoch) / SatelliteService.secondsPerDay
         let n = tle.meanMotion * 2 * .pi / SatelliteService.secondsPerDay
         let a = pow(SatelliteService.mu / (n * n), 1.0 / 3.0)
         let M0 = tle.meanAnomaly * .pi / 180

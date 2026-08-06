@@ -40,8 +40,9 @@ struct QSOEditorView: View {
                             .scaledToFit()
                             .frame(maxHeight: 240)
                     }
+                    let hasImage = imageData != nil
                     PhotosPicker(selection: $selectedPhoto, matching: .images) {
-                        Label(imageData == nil ? "Add Photo" : "Change Photo", systemImage: "photo")
+                        Label(hasImage ? "Change Photo" : "Add Photo", systemImage: "photo")
                     }
                     if imageData != nil {
                         Button("Remove Photo", role: .destructive) {
@@ -67,11 +68,16 @@ struct QSOEditorView: View {
             }
             .onChange(of: selectedPhoto) { _, item in
                 Task {
-                    if let data = try? await item?.loadTransferable(type: Data.self) {
-                        imageData = data
-                    }
+                    await loadPhoto(item)
                 }
             }
+        }
+    }
+
+    @MainActor
+    private func loadPhoto(_ item: PhotosPickerItem?) async {
+        if let data = try? await item?.loadTransferable(type: Data.self) {
+            imageData = data
         }
     }
 
