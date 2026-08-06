@@ -12,6 +12,8 @@ final class UserProfile {
     var qrzApiKey: String
     var qrzUsername: String?
     var qrzPassword: String?
+    var lastQRZSync: Date?
+    var lastPOTASync: Date?
     var useDarkMode: Bool
     var accentColorName: String
 
@@ -24,6 +26,8 @@ final class UserProfile {
         qrzApiKey: String = "",
         qrzUsername: String? = nil,
         qrzPassword: String? = nil,
+        lastQRZSync: Date? = nil,
+        lastPOTASync: Date? = nil,
         useDarkMode: Bool = false,
         accentColorName: String = "blue"
     ) {
@@ -35,6 +39,8 @@ final class UserProfile {
         self.qrzApiKey = qrzApiKey
         self.qrzUsername = qrzUsername
         self.qrzPassword = qrzPassword
+        self.lastQRZSync = lastQRZSync
+        self.lastPOTASync = lastPOTASync
         self.useDarkMode = useDarkMode
         self.accentColorName = accentColorName
     }

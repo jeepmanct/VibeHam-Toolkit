@@ -12,6 +12,7 @@ struct LogView: View {
     @State private var showingShareSheet = false
     @State private var shareItems: [Any] = []
     @State private var qrzSyncInProgress = false
+    @State private var potaSyncInProgress = false
 
     enum FilterMode: String, CaseIterable {
         case all = "All"
@@ -93,7 +94,16 @@ struct LogView: View {
                     EditButton()
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button { syncQRZ() } label: {
+                    Menu {
+                        Button { syncQRZ(full: false) } label: {
+                            Label("Sync New Since Last", systemImage: "arrow.down.circle")
+                        }
+                        .disabled(qrzSyncInProgress)
+                        Button { syncQRZ(full: true) } label: {
+                            Label("Sync All Records", systemImage: "arrow.down.circle.fill")
+                        }
+                        .disabled(qrzSyncInProgress)
+                    } label: {
                         if qrzSyncInProgress {
                             ProgressView()
                                 .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
@@ -103,6 +113,18 @@ struct LogView: View {
                         }
                     }
                     .disabled(qrzSyncInProgress)
+
+                    Button { syncPOTA() } label: {
+                        if potaSyncInProgress {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
+                                .frame(width: 22, height: 22)
+                        } else {
+                            Label("POTA", systemImage: "tree")
+                        }
+                    }
+                    .disabled(potaSyncInProgress)
+
                     Button { exportLog() } label: {
                         Label("Export", systemImage: "square.and.arrow.up")
                     }
@@ -135,7 +157,7 @@ struct LogView: View {
         showingShareSheet = true
     }
 
-    private func syncQRZ() {
+    private func syncQRZ(full: Bool) {
         let profile = UserProfile.fetchOrCreate(in: context)
         guard !profile.qrzApiKey.isEmpty else {
             importResult = "Add your QRZ Logbook API key in Settings first."
@@ -144,7 +166,8 @@ struct LogView: View {
         qrzSyncInProgress = true
         Task {
             do {
-                let adif = try await QRZLogbookService.fetchADIF(apiKey: profile.qrzApiKey)
+                let option: QRZLogbookService.FetchOption = full ? .all : .last
+                let adif = try await QRZLogbookService.fetchADIF(apiKey: profile.qrzApiKey, option: option)
                 let parsed = ADIFParser.parse(content: adif)
                 var inserted = 0
                 var skipped = 0
@@ -159,11 +182,48 @@ struct LogView: View {
                     }
                 }
                 try context.save()
-                importResult = "QRZ sync: imported \(inserted) QSOs, skipped \(skipped) duplicates."
+                profile.lastQRZSync = Date()
+                try context.save()
+                let label = full ? "all" : "new"
+                importResult = "QRZ sync (\(label)): imported \(inserted) QSOs, skipped \(skipped) duplicates."
             } catch {
                 importResult = "QRZ sync failed: \(error.localizedDescription)"
             }
             qrzSyncInProgress = false
+        }
+    }
+
+    private func syncPOTA() {
+        let profile = UserProfile.fetchOrCreate(in: context)
+        guard !profile.callsign.isEmpty else {
+            importResult = "Set your callsign in Settings first so POTA knows whose log to fetch."
+            return
+        }
+        potaSyncInProgress = true
+        Task {
+            do {
+                let potaQSOs = try await POTAService.fetchRecentHunterQSOs(callsign: profile.callsign)
+                let existing = (try? context.fetch(FetchDescriptor<QSO>())) ?? []
+                var inserted = 0
+                var skipped = 0
+                for pota in potaQSOs {
+                    guard let qso = POTAService.parsePOTAQSO(pota, myCallsign: profile.callsign) else { continue }
+                    let isDuplicate = existing.contains { $0.call == qso.call && $0.qsoDate == qso.qsoDate && $0.potaRef == qso.potaRef }
+                    if !isDuplicate {
+                        context.insert(qso)
+                        inserted += 1
+                    } else {
+                        skipped += 1
+                    }
+                }
+                try context.save()
+                profile.lastPOTASync = Date()
+                try context.save()
+                importResult = "POTA sync: imported \(inserted) QSOs, skipped \(skipped) duplicates."
+            } catch {
+                importResult = "POTA sync failed: \(error.localizedDescription)"
+            }
+            potaSyncInProgress = false
         }
     }
 

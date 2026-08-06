@@ -1,11 +1,23 @@
 import Foundation
 
 enum QRZLogbookService {
-    static func fetchADIF(apiKey: String) async throws -> String {
+    enum FetchOption {
+        case all
+        case last
+    }
+
+    static func fetchADIF(apiKey: String, option: FetchOption = .all) async throws -> String {
         var request = URLRequest(url: URL(string: "https://logbook.qrz.com/api")!)
         request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.httpBody = "KEY=\(apiKey)&ACTION=FETCH".data(using: .utf8)
+        var body = "KEY=\(apiKey)&ACTION=FETCH"
+        switch option {
+        case .all:
+            break
+        case .last:
+            body += "&OPTION=LAST"
+        }
+        request.httpBody = body.data(using: .utf8)
 
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {

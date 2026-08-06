@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01A83EFF13C11FAA729D0F7F /* POTAService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D99F367A8191BFA403EA6E /* POTAService.swift */; };
 		0CA38DC72281AE28470AA731 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4295D113C3A79D85E645DDC /* ThemeManager.swift */; };
 		0E4D796F0FD83E931C6747F7 /* SatelliteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11FE90D9F4A71ACDD8EB0EC2 /* SatelliteView.swift */; };
 		1E7B0C488200E26E99732551 /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD2DF3AD38847116AA49504 /* ConditionsView.swift */; };
@@ -42,6 +43,7 @@
 		4E21AD33E4DF6C5DA400ED22 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		52F0496B31EF9EBCDDD1F4EF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5670FA9077787776CA35A5CD /* QSOEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QSOEditorView.swift; sourceTree = "<group>"; };
+		58D99F367A8191BFA403EA6E /* POTAService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POTAService.swift; sourceTree = "<group>"; };
 		5CD2DF3AD38847116AA49504 /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
 		7EB88FA573ED85901D3B56B4 /* GridUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridUtility.swift; sourceTree = "<group>"; };
 		7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ADIFParser.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				AE3EC02B5A6D5C1510B99BB5 /* LogView.swift */,
 				A62586E58C8D05692F8D4D56 /* MapView.swift */,
 				4E21AD33E4DF6C5DA400ED22 /* Models.swift */,
+				58D99F367A8191BFA403EA6E /* POTAService.swift */,
 				9B94E41AA342C36484914814 /* QRZLogbookService.swift */,
 				18D3C560A1E759681F4F6F4C /* QRZLookupView.swift */,
 				CD6C1BC422F160CBE29053FD /* QRZService.swift */,
@@ -184,6 +187,7 @@
 				A751E364F6060D24456C84C3 /* LogView.swift in Sources */,
 				5F5DC8C9CF0D58600B174A63 /* MapView.swift in Sources */,
 				76D97954A2D14BE0C7733C85 /* Models.swift in Sources */,
+				01A83EFF13C11FAA729D0F7F /* POTAService.swift in Sources */,
 				657366F82565818E1DA6AFED /* QRZLogbookService.swift in Sources */,
 				3F386349C63EE5CEBB643984 /* QRZLookupView.swift in Sources */,
 				7F11D009CD6EA090E3A5B3B2 /* QRZService.swift in Sources */,
