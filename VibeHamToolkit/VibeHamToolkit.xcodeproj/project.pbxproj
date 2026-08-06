@@ -16,6 +16,7 @@
 		380C2CE2EEC4793DF005491D /* ADIFExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1047E5C4E3A03FDE3007D4D /* ADIFExporter.swift */; };
 		3F386349C63EE5CEBB643984 /* QRZLookupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D3C560A1E759681F4F6F4C /* QRZLookupView.swift */; };
 		4A2C03E683ACB02D8C8F2DD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB02EC8712F7003466E9DD71 /* Assets.xcassets */; };
+		4D594600CAE63B919E501120 /* POTAAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B28E9EC1F800CF64B8F25B1 /* POTAAuthView.swift */; };
 		5552B111A5A2F7667B1694E1 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454DD7134F0E0DB8BEA6D6 /* KeychainHelper.swift */; };
 		5EA975E13BD2268F10672CCF /* ADIFParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA901A2BDD80D2A803C7599 /* ADIFParser.swift */; };
 		5F5DC8C9CF0D58600B174A63 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62586E58C8D05692F8D4D56 /* MapView.swift */; };
@@ -39,6 +40,7 @@
 		0A7C59023AAD777CB46E4B3A /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		11FE90D9F4A71ACDD8EB0EC2 /* SatelliteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatelliteView.swift; sourceTree = "<group>"; };
 		18D3C560A1E759681F4F6F4C /* QRZLookupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRZLookupView.swift; sourceTree = "<group>"; };
+		1B28E9EC1F800CF64B8F25B1 /* POTAAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POTAAuthView.swift; sourceTree = "<group>"; };
 		26DEBA87D7931EE69648F018 /* AwardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardsView.swift; sourceTree = "<group>"; };
 		3F879E60BF9FE815E3594C4A /* VibeHamToolkit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = VibeHamToolkit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43DE1AF3848BC9194524B8F8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				A62586E58C8D05692F8D4D56 /* MapView.swift */,
 				4E21AD33E4DF6C5DA400ED22 /* Models.swift */,
 				A07687CBF7908E39E59B930E /* POTAAuthManager.swift */,
+				1B28E9EC1F800CF64B8F25B1 /* POTAAuthView.swift */,
 				58D99F367A8191BFA403EA6E /* POTAService.swift */,
 				9B94E41AA342C36484914814 /* QRZLogbookService.swift */,
 				18D3C560A1E759681F4F6F4C /* QRZLookupView.swift */,
@@ -195,6 +198,7 @@
 				5F5DC8C9CF0D58600B174A63 /* MapView.swift in Sources */,
 				76D97954A2D14BE0C7733C85 /* Models.swift in Sources */,
 				CB6CE05D9564BCA63A861AA0 /* POTAAuthManager.swift in Sources */,
+				4D594600CAE63B919E501120 /* POTAAuthView.swift in Sources */,
 				01A83EFF13C11FAA729D0F7F /* POTAService.swift in Sources */,
 				657366F82565818E1DA6AFED /* QRZLogbookService.swift in Sources */,
 				3F386349C63EE5CEBB643984 /* QRZLookupView.swift in Sources */,

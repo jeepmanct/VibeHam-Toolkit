@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import AuthenticationServices
 import CryptoKit
 
@@ -27,7 +28,11 @@ final class POTAAuthManager: NSObject, ASWebAuthenticationPresentationContextPro
     }
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        ASPresentationAnchor()
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = scene.windows.first(where: \.isKeyWindow) ?? scene.windows.first {
+            return window
+        }
+        return ASPresentationAnchor()
     }
 
     @MainActor
@@ -77,7 +82,11 @@ final class POTAAuthManager: NSObject, ASWebAuthenticationPresentationContextPro
             session.presentationContextProvider = self
             session.prefersEphemeralWebBrowserSession = false
             self.webAuthSession = session
-            session.start()
+            guard session.start() else {
+                self.pendingContinuation?.resume(returning: .failure(URLError(.resourceUnavailable)))
+                self.pendingContinuation = nil
+                return
+            }
         }
     }
 
@@ -133,11 +142,15 @@ final class POTAAuthManager: NSObject, ASWebAuthenticationPresentationContextPro
     }
 
     func signOut() {
+        idToken = nil
+        refreshToken = nil
         KeychainHelper.delete(service: "com.vibeham.pota", account: "idToken")
         KeychainHelper.delete(service: "com.vibeham.pota", account: "refreshToken")
     }
 
     private func save(tokens: POTATokens) {
+        idToken = tokens.idToken ?? idToken
+        refreshToken = tokens.refreshToken ?? refreshToken
         if let idToken = tokens.idToken {
             KeychainHelper.save(idToken, service: "com.vibeham.pota", account: "idToken")
         }

@@ -13,6 +13,7 @@ struct LogView: View {
     @State private var shareItems: [Any] = []
     @State private var qrzSyncInProgress = false
     @State private var potaSyncInProgress = false
+    @State private var showingPOTAAuth = false
 
     enum FilterMode: String, CaseIterable {
         case all = "All"
@@ -128,7 +129,7 @@ struct LogView: View {
                                 Label("Disconnect POTA", systemImage: "xmark.circle")
                             }
                         } else {
-                            Button { signInPOTA() } label: {
+                            Button { showingPOTAAuth = true } label: {
                                 Label("Sign In to POTA", systemImage: "person.badge.key")
                             }
                             Button { syncPOTA(full: false) } label: {
@@ -166,6 +167,9 @@ struct LogView: View {
             }
             .sheet(isPresented: $showingShareSheet) {
                 ShareSheet(items: shareItems)
+            }
+            .sheet(isPresented: $showingPOTAAuth) {
+                POTAAuthView()
             }
         }
     }
@@ -212,18 +216,6 @@ struct LogView: View {
                 importResult = "QRZ sync failed: \(error.localizedDescription)"
             }
             qrzSyncInProgress = false
-        }
-    }
-
-    private func signInPOTA() {
-        Task {
-            let result = await POTAAuthManager.shared.signIn()
-            switch result {
-            case .success:
-                importResult = "Signed in to POTA. Tap POTA -> Sync Full POTA Log to download your logbook."
-            case .failure(let error):
-                importResult = "POTA sign-in failed: \(error.localizedDescription)"
-            }
         }
     }
 
