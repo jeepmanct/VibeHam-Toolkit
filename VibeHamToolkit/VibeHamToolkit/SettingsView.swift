@@ -22,6 +22,7 @@ struct SettingsView: View {
     @State private var qrzTestResult: String?
     @State private var showQRZKey = false
     @State private var showQRZPassword = false
+    @State private var cleanupMessage: String?
 
     private let colors = ["red", "orange", "yellow", "green", "mint", "teal", "cyan", "blue", "indigo", "purple", "pink"]
     private let schemes = ["system", "light", "dark"]
@@ -129,6 +130,17 @@ struct SettingsView: View {
                     }
                 }
 
+                Section("Data Maintenance") {
+                    Button("Normalize QSO Fields") {
+                        normalizeQSOs()
+                    }
+                    if let cleanupMessage {
+                        Text(cleanupMessage)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
                 Section {
                     Button("Save") {
                         save()
@@ -215,6 +227,30 @@ struct SettingsView: View {
     private func clearMessageAfterDelay() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             saveMessage = nil
+        }
+    }
+
+    private func normalizeQSOs() {
+        do {
+            let allQSOs = try context.fetch(FetchDescriptor<QSO>())
+            for qso in allQSOs {
+                qso.call = qso.call.uppercased().trimmingCharacters(in: .whitespaces)
+                qso.band = qso.band?.lowercased().trimmingCharacters(in: .whitespaces)
+                qso.mode = qso.mode?.uppercased().trimmingCharacters(in: .whitespaces)
+                qso.gridsquare = qso.gridsquare?.uppercased().trimmingCharacters(in: .whitespaces)
+                qso.country = qso.country?.trimmingCharacters(in: .whitespaces)
+                qso.state = qso.state?.uppercased().trimmingCharacters(in: .whitespaces)
+                qso.continent = qso.continent?.uppercased().trimmingCharacters(in: .whitespaces)
+                qso.potaRef = qso.potaRef?.uppercased().trimmingCharacters(in: .whitespaces)
+                qso.sotaRef = qso.sotaRef?.uppercased().trimmingCharacters(in: .whitespaces)
+            }
+            try context.save()
+            cleanupMessage = "Normalized \(allQSOs.count) QSOs."
+        } catch {
+            cleanupMessage = "Cleanup failed: \(error.localizedDescription)"
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            cleanupMessage = nil
         }
     }
 

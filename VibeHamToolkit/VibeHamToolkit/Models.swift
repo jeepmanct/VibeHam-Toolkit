@@ -108,28 +108,28 @@ final class QSO {
         sotaRef: String? = nil
     ) {
         self.id = id
-        self.call = call
+        self.call = call.uppercased().trimmingCharacters(in: .whitespaces)
         self.qsoDate = qsoDate
-        self.timeOn = timeOn
-        self.band = band
-        self.mode = mode
-        self.freq = freq
-        self.rstSent = rstSent
-        self.rstRcvd = rstRcvd
-        self.gridsquare = gridsquare
-        self.country = country
-        self.state = state
-        self.county = county
-        self.cqz = cqz
-        self.iota = iota
-        self.continent = continent
-        self.lotwQslRcvd = lotwQslRcvd
-        self.lotwQslRcvdDate = lotwQslRcvdDate
+        self.timeOn = timeOn?.trimmingCharacters(in: .whitespaces)
+        self.band = band?.lowercased().trimmingCharacters(in: .whitespaces)
+        self.mode = mode?.uppercased().trimmingCharacters(in: .whitespaces)
+        self.freq = freq?.trimmingCharacters(in: .whitespaces)
+        self.rstSent = rstSent?.trimmingCharacters(in: .whitespaces)
+        self.rstRcvd = rstRcvd?.trimmingCharacters(in: .whitespaces)
+        self.gridsquare = gridsquare?.uppercased().trimmingCharacters(in: .whitespaces)
+        self.country = country?.trimmingCharacters(in: .whitespaces)
+        self.state = state?.uppercased().trimmingCharacters(in: .whitespaces)
+        self.county = county?.trimmingCharacters(in: .whitespaces)
+        self.cqz = cqz?.trimmingCharacters(in: .whitespaces)
+        self.iota = iota?.trimmingCharacters(in: .whitespaces)
+        self.continent = continent?.uppercased().trimmingCharacters(in: .whitespaces)
+        self.lotwQslRcvd = lotwQslRcvd?.trimmingCharacters(in: .whitespaces)
+        self.lotwQslRcvdDate = lotwQslRcvdDate?.trimmingCharacters(in: .whitespaces)
         self.rawAdif = rawAdif
         self.importedAt = Date()
         self.imageData = imageData
-        self.potaRef = potaRef
-        self.sotaRef = sotaRef
+        self.potaRef = potaRef?.uppercased().trimmingCharacters(in: .whitespaces)
+        self.sotaRef = sotaRef?.uppercased().trimmingCharacters(in: .whitespaces)
     }
 
     var date: Date? {

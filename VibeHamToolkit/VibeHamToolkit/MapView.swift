@@ -22,6 +22,10 @@ struct MapView: View {
         Set(qsos.compactMap { $0.mode }).sorted()
     }
 
+    private var availableCountries: [String] {
+        Set(qsos.compactMap { $0.country }).sorted()
+    }
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
@@ -68,6 +72,7 @@ struct MapView: View {
                     filter: $appliedFilter,
                     bands: availableBands,
                     modes: availableModes,
+                    countries: availableCountries,
                     totalQSOs: qsos.count,
                     onApply: {
                         applyFilter()
@@ -132,13 +137,14 @@ struct QSOFilter: Equatable {
     var callsign = ""
     var band = ""
     var mode = ""
+    var country = ""
     var startDate: Date?
     var endDate: Date?
     var potaOnly = false
     var sotaOnly = false
 
     var isActive: Bool {
-        !callsign.isEmpty || !band.isEmpty || !mode.isEmpty || startDate != nil || endDate != nil || potaOnly || sotaOnly
+        !callsign.isEmpty || !band.isEmpty || !mode.isEmpty || !country.isEmpty || startDate != nil || endDate != nil || potaOnly || sotaOnly
     }
 
     func matches(_ qso: QSO) -> Bool {
@@ -148,6 +154,7 @@ struct QSOFilter: Equatable {
         }
         if !band.isEmpty, qso.band != band { return false }
         if !mode.isEmpty, qso.mode != mode { return false }
+        if !country.isEmpty, qso.country != country { return false }
         if potaOnly, (qso.potaRef ?? "").isEmpty { return false }
         if sotaOnly, (qso.sotaRef ?? "").isEmpty { return false }
 
@@ -172,6 +179,7 @@ struct MapFilterSheet: View {
     @Binding var filter: QSOFilter
     let bands: [String]
     let modes: [String]
+    let countries: [String]
     let totalQSOs: Int
     let onApply: () -> Void
 
@@ -196,6 +204,15 @@ struct MapFilterSheet: View {
                         Text("Any").tag("")
                         ForEach(modes, id: \.self) { mode in
                             Text(mode).tag(mode)
+                        }
+                    }
+                }
+
+                Section("Country") {
+                    Picker("Country", selection: $filter.country) {
+                        Text("Any").tag("")
+                        ForEach(countries, id: \.self) { country in
+                            Text(country).tag(country)
                         }
                     }
                 }
