@@ -160,6 +160,15 @@ final class POTAAuthManager: NSObject, ASWebAuthenticationPresentationContextPro
         KeychainHelper.delete(service: "com.vibeham.pota", account: "refreshToken")
     }
 
+    func saveManuallyPastedTokens(idToken: String, refreshToken: String? = nil) {
+        self.idToken = idToken
+        KeychainHelper.save(idToken, service: "com.vibeham.pota", account: "idToken")
+        if let refreshToken = refreshToken, !refreshToken.isEmpty {
+            self.refreshToken = refreshToken
+            KeychainHelper.save(refreshToken, service: "com.vibeham.pota", account: "refreshToken")
+        }
+    }
+
     private func save(tokens: POTATokens) {
         idToken = tokens.idToken ?? idToken
         refreshToken = tokens.refreshToken ?? refreshToken
