@@ -94,7 +94,13 @@ struct LogView: View {
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button { syncQRZ() } label: {
-                        Label("QRZ", systemImage: "arrow.triangle.2.circlepath")
+                        if qrzSyncInProgress {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
+                                .frame(width: 22, height: 22)
+                        } else {
+                            Label("QRZ", systemImage: "arrow.triangle.2.circlepath")
+                        }
                     }
                     .disabled(qrzSyncInProgress)
                     Button { exportLog() } label: {
