@@ -10,8 +10,8 @@ final class UserProfile {
     var latitude: Double
     var longitude: Double
     var qrzApiKey: String
-    var qrzUsername: String
-    var qrzPassword: String
+    var qrzUsername: String?
+    var qrzPassword: String?
     var useDarkMode: Bool
     var accentColorName: String
 
@@ -22,8 +22,8 @@ final class UserProfile {
         latitude: Double = 0,
         longitude: Double = 0,
         qrzApiKey: String = "",
-        qrzUsername: String = "",
-        qrzPassword: String = "",
+        qrzUsername: String? = nil,
+        qrzPassword: String? = nil,
         useDarkMode: Bool = false,
         accentColorName: String = "blue"
     ) {

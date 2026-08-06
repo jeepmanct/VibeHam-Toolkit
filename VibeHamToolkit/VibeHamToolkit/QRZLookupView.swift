@@ -62,12 +62,13 @@ struct QRZLookupView: View {
         errorText = nil
         defer { isLoading = false }
         let profile = UserProfile.fetchOrCreate(in: context)
-        guard !profile.qrzUsername.isEmpty && !profile.qrzPassword.isEmpty else {
+        guard let username = profile.qrzUsername, !username.isEmpty,
+              let password = profile.qrzPassword, !password.isEmpty else {
             errorText = "Add your QRZ username and password in Settings."
             return
         }
         do {
-            info = try await QRZService.shared.lookup(callsign: call, username: profile.qrzUsername, password: profile.qrzPassword)
+            info = try await QRZService.shared.lookup(callsign: call, username: username, password: password)
         } catch {
             errorText = error.localizedDescription
         }

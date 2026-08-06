@@ -20,6 +20,8 @@ struct SettingsView: View {
     @State private var saveMessage: String?
     @State private var testingQRZ = false
     @State private var qrzTestResult: String?
+    @State private var showQRZKey = false
+    @State private var showQRZPassword = false
 
     private let colors = ["red", "orange", "yellow", "green", "mint", "teal", "cyan", "blue", "indigo", "purple", "pink"]
     private let schemes = ["system", "light", "dark"]
@@ -38,8 +40,33 @@ struct SettingsView: View {
                 }
 
                 Section("Integrations") {
-                    SecureField("QRZ Logbook API Key", text: $qrzApiKey, prompt: Text("6456-85A5-D502-3DEE"))
-                    Text("Used to sync your QRZ Logbook ADIF. Get it from QRZ.com → Logbook → Settings.")
+                    HStack {
+                        Group {
+                            if showQRZKey {
+                                TextField("QRZ Logbook API Key", text: $qrzApiKey, prompt: Text("XXXX-XXXX-XXXX-XXXX"))
+                                    .autocapitalization(.none)
+                                    .autocorrectionDisabled()
+                                    .onChange(of: qrzApiKey) { _, newValue in
+                                        qrzApiKey = formatQRZKey(newValue)
+                                    }
+                            } else {
+                                SecureField("QRZ Logbook API Key", text: $qrzApiKey, prompt: Text("XXXX-XXXX-XXXX-XXXX"))
+                                    .autocapitalization(.none)
+                                    .autocorrectionDisabled()
+                                    .onChange(of: qrzApiKey) { _, newValue in
+                                        qrzApiKey = formatQRZKey(newValue)
+                                    }
+                            }
+                        }
+                        Button {
+                            showQRZKey.toggle()
+                        } label: {
+                            Image(systemName: showQRZKey ? "eye.slash" : "eye")
+                        }
+                        .buttonStyle(.borderless)
+                    }
+
+                    Text("Used to sync your QRZ Logbook ADIF. Get it from QRZ.com -> Logbook -> Settings.")
                         .font(.caption).foregroundStyle(.secondary)
 
                     Button {
@@ -64,7 +91,27 @@ struct SettingsView: View {
                     TextField("QRZ Username (callsign lookup)", text: $qrzUsername)
                         .autocapitalization(.none)
                         .autocorrectionDisabled()
-                    SecureField("QRZ Password (callsign lookup)", text: $qrzPassword)
+
+                    HStack {
+                        Group {
+                            if showQRZPassword {
+                                TextField("QRZ Password (callsign lookup)", text: $qrzPassword)
+                                    .autocapitalization(.none)
+                                    .autocorrectionDisabled()
+                            } else {
+                                SecureField("QRZ Password (callsign lookup)", text: $qrzPassword)
+                                    .autocapitalization(.none)
+                                    .autocorrectionDisabled()
+                            }
+                        }
+                        Button {
+                            showQRZPassword.toggle()
+                        } label: {
+                            Image(systemName: showQRZPassword ? "eye.slash" : "eye")
+                        }
+                        .buttonStyle(.borderless)
+                    }
+
                     Text("QRZ callsign lookup requires an active QRZ XML Data subscription.")
                         .font(.caption).foregroundStyle(.secondary)
                 }
@@ -107,6 +154,17 @@ struct SettingsView: View {
         }
     }
 
+    private func formatQRZKey(_ input: String) -> String {
+        let cleaned = input.uppercased().filter { $0.isLetter || $0.isNumber }
+        var chunks: [String] = []
+        for i in stride(from: 0, to: cleaned.count, by: 4) {
+            let start = cleaned.index(cleaned.startIndex, offsetBy: i)
+            let end = cleaned.index(start, offsetBy: min(4, cleaned.count - i))
+            chunks.append(String(cleaned[start..<end]))
+        }
+        return chunks.joined(separator: "-")
+    }
+
     private func load() {
         let p = UserProfile.fetchOrCreate(in: context)
         profile = p
@@ -115,9 +173,9 @@ struct SettingsView: View {
         gridSquare = p.gridSquare
         latitude = p.latitude == 0 ? "" : String(p.latitude)
         longitude = p.longitude == 0 ? "" : String(p.longitude)
-        qrzApiKey = p.qrzApiKey
-        qrzUsername = p.qrzUsername
-        qrzPassword = p.qrzPassword
+        qrzApiKey = formatQRZKey(p.qrzApiKey)
+        qrzUsername = p.qrzUsername ?? ""
+        qrzPassword = p.qrzPassword ?? ""
         accentColor = themeManager.accentColorName
         colorSchemeName = themeManager.colorSchemeName
     }
@@ -134,15 +192,20 @@ struct SettingsView: View {
         p.latitude = Double(latitude) ?? 0
         p.longitude = Double(longitude) ?? 0
         p.qrzApiKey = qrzApiKey
-        p.qrzUsername = qrzUsername
-        p.qrzPassword = qrzPassword
+        p.qrzUsername = qrzUsername.isEmpty ? nil : qrzUsername
+        p.qrzPassword = qrzPassword.isEmpty ? nil : qrzPassword
         p.accentColorName = accentColor
 
         do {
             try context.save()
             themeManager.setAccent(accentColor)
             themeManager.setScheme(colorSchemeName)
-            saveMessage = "Saved"
+
+            // Verify persistence by re-fetching from a fresh context read
+            let verify = UserProfile.fetchOrCreate(in: context)
+            let keySet = !verify.qrzApiKey.isEmpty
+            let userSet = !(verify.qrzUsername ?? "").isEmpty
+            saveMessage = "Saved (key \(keySet ? "set" : "empty"), user \(userSet ? "set" : "empty"))"
         } catch {
             saveMessage = "Save failed: \(error.localizedDescription)"
         }
@@ -150,7 +213,7 @@ struct SettingsView: View {
     }
 
     private func clearMessageAfterDelay() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             saveMessage = nil
         }
     }
