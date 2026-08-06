@@ -59,6 +59,10 @@ final class POTAAuthManager: NSObject, ASWebAuthenticationPresentationContextPro
             return .failure(URLError(.badURL))
         }
 
+        #if DEBUG
+        print("POTA authorize URL: \(url.absoluteString)")
+        #endif
+
         return await withCheckedContinuation { continuation in
             self.pendingContinuation = continuation
             let session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) { [weak self] callbackURL, error in
@@ -92,8 +96,16 @@ final class POTAAuthManager: NSObject, ASWebAuthenticationPresentationContextPro
 
     private func exchangeCode(callbackURL: URL, verifier: String, expectedState: String) async -> Result<POTATokens, Error> {
         guard let components = URLComponents(url: callbackURL, resolvingAgainstBaseURL: true),
-              let queryItems = components.queryItems,
-              let code = queryItems.first(where: { $0.name == "code" })?.value,
+              let queryItems = components.queryItems else {
+            return .failure(URLError(.badServerResponse))
+        }
+
+        if let error = queryItems.first(where: { $0.name == "error" })?.value,
+           let description = queryItems.first(where: { $0.name == "error_description" })?.value {
+            return .failure(POTAAuthError.oauthError(error, description))
+        }
+
+        guard let code = queryItems.first(where: { $0.name == "code" })?.value,
               let returnedState = queryItems.first(where: { $0.name == "state" })?.value,
               returnedState == expectedState else {
             return .failure(URLError(.badServerResponse))
@@ -156,6 +168,19 @@ final class POTAAuthManager: NSObject, ASWebAuthenticationPresentationContextPro
         }
         if let refreshToken = tokens.refreshToken {
             KeychainHelper.save(refreshToken, service: "com.vibeham.pota", account: "refreshToken")
+        }
+    }
+}
+
+enum POTAAuthError: Error {
+    case oauthError(String, String)
+}
+
+extension POTAAuthError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .oauthError(let code, let description):
+            return "POTA OAuth error: \(code) - \(description)"
         }
     }
 }
